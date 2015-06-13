@@ -1,2 +1,1 @@
-# HxC-Lasers
-A mod by HxCKDMS that brings back the old laser mod.
+![alt tag](http://i.imgur.com/VIT4lAC.png)
