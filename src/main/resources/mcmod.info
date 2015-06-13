@@ -1,0 +1,15 @@
+[
+  {
+    "modid": "HxCLasers",
+    "name": "HxC-Lasers",
+    "description": "IDK",
+    "version": "1.0",
+    "credits": "Ideas from the old laser mod",
+	"logoFile": "",
+    "mcversion": "1.7.10",
+    "authors": ["§4HxCK§3D§eM§0S§r"],
+    "dependencies": [
+           "mod_MinecraftForge"
+    ]
+  }
+]
