@@ -12,13 +12,13 @@ public class PacketLensMakerSync extends AbstractPacket {
     int y = 0;
     int z = 0;
 
-    double red = 0;
-    double green = 0;
-    double blue = 0;
+    float red = 0;
+    float green = 0;
+    float blue = 0;
 
     public PacketLensMakerSync() {}
 
-    public PacketLensMakerSync(int x, int y, int z, double red, double green, double blue) {
+    public PacketLensMakerSync(int x, int y, int z, float red, float green, float blue) {
         this.x = x;
         this.y = y;
         this.z = z;
@@ -34,9 +34,9 @@ public class PacketLensMakerSync extends AbstractPacket {
         byteBuf.writeInt(y);
         byteBuf.writeInt(z);
 
-        byteBuf.writeDouble(red);
-        byteBuf.writeDouble(green);
-        byteBuf.writeDouble(blue);
+        byteBuf.writeFloat(red);
+        byteBuf.writeFloat(green);
+        byteBuf.writeFloat(blue);
     }
 
     @Override
@@ -45,9 +45,9 @@ public class PacketLensMakerSync extends AbstractPacket {
         y = byteBuf.readInt();
         z = byteBuf.readInt();
 
-        red = byteBuf.readDouble();
-        green = byteBuf.readDouble();
-        blue = byteBuf.readDouble();
+        red = byteBuf.readFloat();
+        green = byteBuf.readFloat();
+        blue = byteBuf.readFloat();
     }
 
     @Override

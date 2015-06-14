@@ -10,9 +10,9 @@ import net.minecraft.network.play.server.S35PacketUpdateTileEntity;
 import net.minecraft.tileentity.TileEntity;
 
 public class TileEntityLensMaker extends TileEntity implements IInventory {
-    public double red_percentage = 0;
-    public double green_percentage = 0;
-    public double blue_percentage = 0;
+    public float red_percentage = 0;
+    public float green_percentage = 0;
+    public float blue_percentage = 0;
 
     @Override
     public int getSizeInventory() {
@@ -86,23 +86,21 @@ public class TileEntityLensMaker extends TileEntity implements IInventory {
     }
 
     public void readSyncableDataFromNBT(NBTTagCompound tagCompound){
-        red_percentage = tagCompound.getDouble("Red");
-        green_percentage = tagCompound.getDouble("Green");
-        blue_percentage = tagCompound.getDouble("Blue");
+        red_percentage = tagCompound.getFloat("Red");
+        green_percentage = tagCompound.getFloat("Green");
+        blue_percentage = tagCompound.getFloat("Blue");
     }
 
     @Override
     public void writeToNBT(NBTTagCompound tagCompound) {
         super.writeToNBT(tagCompound);
-
-        System.out.println("test");
         writeSyncableDataToNBT(tagCompound);
     }
 
     public void writeSyncableDataToNBT(NBTTagCompound tagCompound){
-        tagCompound.setDouble("Red", red_percentage);
-        tagCompound.setDouble("Green", green_percentage);
-        tagCompound.setDouble("Blue", blue_percentage);
+        tagCompound.setFloat("Red", red_percentage);
+        tagCompound.setFloat("Green", green_percentage);
+        tagCompound.setFloat("Blue", blue_percentage);
     }
 
     @Override
