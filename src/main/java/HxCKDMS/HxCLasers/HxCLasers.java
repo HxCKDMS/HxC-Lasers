@@ -1,6 +1,9 @@
 package HxCKDMS.HxCLasers;
 
 import HxCKDMS.HxCCore.api.Utils.LogHelper;
+import HxCKDMS.HxCCore.network.PacketPipeline;
+import HxCKDMS.HxCLasers.Handlers.GuiHandler;
+import HxCKDMS.HxCLasers.Network.PacketLensMakerSync;
 import HxCKDMS.HxCLasers.Proxy.IProxy;
 import HxCKDMS.HxCLasers.Registry.Registry;
 import cpw.mods.fml.common.Mod;
@@ -8,14 +11,16 @@ import cpw.mods.fml.common.SidedProxy;
 import cpw.mods.fml.common.event.FMLInitializationEvent;
 import cpw.mods.fml.common.event.FMLPostInitializationEvent;
 import cpw.mods.fml.common.event.FMLPreInitializationEvent;
+import cpw.mods.fml.common.network.NetworkRegistry;
 
 import static HxCKDMS.HxCLasers.Lib.References.*;
 
 @Mod(modid = MOD_ID, name = MOD_NAME, version = VERSION, dependencies = DEPENDENCIES)
 public class HxCLasers {
+    public static PacketPipeline packetPipeline = new PacketPipeline();
 
     @Mod.Instance(MOD_ID)
-    public static HxCLasers HxCLasers;
+    public static HxCLasers instance;
 
     @SidedProxy(serverSide = SERVER_PROXY_LOCATION, clientSide = CLIENT_PROXY_LOCATION)
     public static IProxy proxy;
@@ -29,11 +34,18 @@ public class HxCLasers {
 
     @Mod.EventHandler
     public void init(FMLInitializationEvent event){
+        registerPackets();
+        packetPipeline.initialize(PACKET_CHANNEL_NAME);
 
+        NetworkRegistry.INSTANCE.registerGuiHandler(this, new GuiHandler());
     }
 
     @Mod.EventHandler
     public void postInit(FMLPostInitializationEvent event){
+        packetPipeline.postInitialize();
+    }
 
+    private void registerPackets(){
+        packetPipeline.addPacket(PacketLensMakerSync.class);
     }
 }
