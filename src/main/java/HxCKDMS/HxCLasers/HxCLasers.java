@@ -28,14 +28,17 @@ public class HxCLasers {
     @Mod.EventHandler
     public void preInit(FMLPreInitializationEvent event){
         Registry.preInit();
+        proxy.preInit(event);
 
         LogHelper.info("Thank you for using HxC Lasers", MOD_ID);
     }
 
     @Mod.EventHandler
     public void init(FMLInitializationEvent event){
+        Registry.init();
         registerPackets();
         packetPipeline.initialize(PACKET_CHANNEL_NAME);
+        proxy.init(event);
 
         NetworkRegistry.INSTANCE.registerGuiHandler(this, new GuiHandler());
     }
@@ -43,6 +46,7 @@ public class HxCLasers {
     @Mod.EventHandler
     public void postInit(FMLPostInitializationEvent event){
         packetPipeline.postInitialize();
+        proxy.postInit(event);
     }
 
     private void registerPackets(){
