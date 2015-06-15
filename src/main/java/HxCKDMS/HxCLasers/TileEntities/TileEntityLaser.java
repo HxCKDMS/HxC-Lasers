@@ -19,7 +19,7 @@ public class TileEntityLaser extends TileEntity implements ILaser {
                 isPowered = worldObj.isBlockIndirectlyGettingPowered(xCoord + direction.offsetX, yCoord + direction.offsetY, zCoord + direction.offsetZ);
 
             if(isPowered && !prevIsPowered) {
-                ForgeDirection direction = ForgeDirection.NORTH;
+                ForgeDirection direction = ForgeDirection.getOrientation(getBlockMetadata());
 
                 worldObj.spawnEntityInWorld(new EntityLaserBeam(worldObj, xCoord + 0.5 + direction.offsetX, yCoord + direction.offsetY, zCoord + 0.5 + direction.offsetZ, UUID.randomUUID(), direction, 2));
             }

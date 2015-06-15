@@ -21,7 +21,7 @@ public class EntityLaserRenderer extends RenderEntity{
     }
 
     private void doRender(EntityLaserBeam entityLaserBeam, double x, double y, double z, float yaw, float pitch){
-        ForgeDirection direction = entityLaserBeam.direction;
+        ForgeDirection direction = ForgeDirection.getOrientation(entityLaserBeam.getDataWatcher().getWatchableObjectInt(30));
         boolean goNorth = (direction == ForgeDirection.NORTH || direction == ForgeDirection.SOUTH);
         boolean goEast = (direction == ForgeDirection.EAST || direction == ForgeDirection.WEST);
 
@@ -71,7 +71,7 @@ public class EntityLaserRenderer extends RenderEntity{
                 tessellator.addVertex(size_2, 1, size_1);
 
                 //TOP
-                if(entityLaserBeam.shouldDrawTop) {
+                if(entityLaserBeam.getDataWatcher().getWatchableObjectByte(31) == 1) {
                     tessellator.addVertex(size_1, 1, size_1);
                     tessellator.addVertex(size_1, 1, size_2);
                     tessellator.addVertex(size_2, 1, size_2);
