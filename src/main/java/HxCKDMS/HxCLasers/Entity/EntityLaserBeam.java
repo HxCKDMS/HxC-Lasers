@@ -134,4 +134,6 @@ public class EntityLaserBeam extends Entity {
         distanceExtending = tagCompound.getInteger("DistanceExtending");
         super.readFromNBT(tagCompound);
     }
+
+
 }
