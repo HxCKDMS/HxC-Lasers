@@ -15,8 +15,7 @@ public class TileEntityLaser extends TileEntity implements ILaser {
     @Override
     public void updateEntity() {
         if(!worldObj.isRemote){
-            //for(ForgeDirection direction : ForgeDirection.VALID_DIRECTIONS)
-                isPowered = worldObj.isBlockIndirectlyGettingPowered(xCoord, yCoord, zCoord);
+            isPowered = worldObj.isBlockIndirectlyGettingPowered(xCoord, yCoord, zCoord);
 
             if(isPowered && !prevIsPowered) {
                 ForgeDirection direction = ForgeDirection.getOrientation(getBlockMetadata());
