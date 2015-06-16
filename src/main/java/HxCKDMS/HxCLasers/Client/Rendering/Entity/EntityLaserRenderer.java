@@ -41,7 +41,7 @@ public class EntityLaserRenderer extends RenderEntity{
             GL11.glEnable(GL11.GL_BLEND);
             GL11.glDisable(GL11.GL_LIGHTING);
             OpenGlHelper.setLightmapTextureCoords(OpenGlHelper.lightmapTexUnit, 230, 230);
-            
+
             tessellator.startDrawingQuads();
             {
                 tessellator.setBrightness(15728880);
@@ -76,10 +76,18 @@ public class EntityLaserRenderer extends RenderEntity{
 
                 //TOP
                 if(entityLaserBeam.getDataWatcher().getWatchableObjectByte(31) == 1) {
-                    tessellator.addVertex(size_1, 1, size_1);
-                    tessellator.addVertex(size_1, 1, size_2);
-                    tessellator.addVertex(size_2, 1, size_2);
-                    tessellator.addVertex(size_2, 1, size_1);
+
+                    if(direction == ForgeDirection.SOUTH || direction == ForgeDirection.EAST || direction == ForgeDirection.UP){
+                        tessellator.addVertex(size_1, 1, size_1);
+                        tessellator.addVertex(size_1, 1, size_2);
+                        tessellator.addVertex(size_2, 1, size_2);
+                        tessellator.addVertex(size_2, 1, size_1);
+                    }else{
+                        tessellator.addVertex(size_1, 0, size_2);
+                        tessellator.addVertex(size_1, 0, size_1);
+                        tessellator.addVertex(size_2, 0, size_1);
+                        tessellator.addVertex(size_2, 0, size_2);
+                    }
                 }
             }
             tessellator.draw();

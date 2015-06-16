@@ -2,7 +2,6 @@ package HxCKDMS.HxCLasers.Entity;
 
 import HxCKDMS.HxCLasers.Api.ILaser;
 import net.minecraft.entity.Entity;
-import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.AxisAlignedBB;
@@ -55,10 +54,10 @@ public class EntityLaserBeam extends Entity {
     }
 
     public boolean canExist() {
-        AxisAlignedBB AABB_PREV = boundingBox.copy();
-        AABB_PREV.offset(direction.getOpposite().offsetX, direction.getOpposite().offsetY, direction.getOpposite().offsetZ);
+        AxisAlignedBB axisAlignedBB = boundingBox.copy();
+        axisAlignedBB.offset(direction.getOpposite().offsetX, direction.getOpposite().offsetY, direction.getOpposite().offsetZ);
 
-        for (Object object : worldObj.getEntitiesWithinAABB(EntityLaserBeam.class, AABB_PREV)) {
+        for (Object object : worldObj.getEntitiesWithinAABB(EntityLaserBeam.class, axisAlignedBB)) {
             if (object instanceof EntityLaserBeam) {
                 EntityLaserBeam entityLaserBeam = (EntityLaserBeam) object;
                 if (entityLaserBeam.uuid == uuid) {
@@ -71,10 +70,10 @@ public class EntityLaserBeam extends Entity {
     }
 
     public boolean canBePlaced() {
-        AxisAlignedBB AABB_NEXT = boundingBox.copy();
-        AABB_NEXT.offset(direction.offsetX, direction.offsetY, direction.offsetZ);
+        AxisAlignedBB axisAlignedBB = boundingBox.copy();
+        axisAlignedBB.offset(direction.offsetX, direction.offsetY, direction.offsetZ);
 
-        List entityList = worldObj.getEntitiesWithinAABB(EntityLaserBeam.class, AABB_NEXT);
+        List entityList = worldObj.getEntitiesWithinAABB(EntityLaserBeam.class, axisAlignedBB);
         if(entityList.size() == 0) return true;
         for(Object object : entityList){
             if (object instanceof EntityLaserBeam) {
@@ -101,7 +100,6 @@ public class EntityLaserBeam extends Entity {
             dataWatcher.updateObject(30, direction.ordinal());
             dataWatcher.updateObject(31, shouldDrawTop ? (byte) 1 : (byte) 0);
         }
-        super.onUpdate();
     }
 
     @Override
@@ -112,11 +110,6 @@ public class EntityLaserBeam extends Entity {
     @Override
     public boolean doesEntityNotTriggerPressurePlate() {
         return true;
-    }
-
-    @Override
-    public void onCollideWithPlayer(EntityPlayer player) {
-
     }
 
     @Override
@@ -134,6 +127,4 @@ public class EntityLaserBeam extends Entity {
         distanceExtending = tagCompound.getInteger("DistanceExtending");
         super.readFromNBT(tagCompound);
     }
-
-
 }
