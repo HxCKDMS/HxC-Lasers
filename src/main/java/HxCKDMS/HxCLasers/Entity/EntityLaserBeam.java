@@ -32,12 +32,13 @@ public class EntityLaserBeam extends Entity {
         this.uuid = uuid;
         this.direction = direction;
         this.distanceExtending = distanceExtending;
-
-        dataWatcher.updateObject(30, this.direction.ordinal());
+        isAirBorne = true;
     }
 
     @Override
     protected void entityInit() {
+        dataWatcher.addObject(29, (float) posY);
+
         dataWatcher.addObject(30, 1); //direction
         dataWatcher.addObject(31, (byte) 1); //shouldDrawTop
         setSize(1, 1);
@@ -99,6 +100,15 @@ public class EntityLaserBeam extends Entity {
 
             dataWatcher.updateObject(30, direction.ordinal());
             dataWatcher.updateObject(31, shouldDrawTop ? (byte) 1 : (byte) 0);
+
+            dataWatcher.updateObject(29, (float) posY);
+        }else{
+            System.out.println(posY);
+
+            direction = ForgeDirection.getOrientation(dataWatcher.getWatchableObjectInt(30));
+            shouldDrawTop = dataWatcher.getWatchableObjectByte(31) == 1;
+
+            posY = dataWatcher.getWatchableObjectFloat(29);
         }
     }
 
@@ -127,4 +137,11 @@ public class EntityLaserBeam extends Entity {
         distanceExtending = tagCompound.getInteger("DistanceExtending");
         super.readFromNBT(tagCompound);
     }
+
+    @Override
+    public float getShadowSize() {
+        return 0.0F;
+    }
+
+
 }
