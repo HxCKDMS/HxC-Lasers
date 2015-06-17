@@ -137,11 +137,4 @@ public class EntityLaserBeam extends Entity {
         distanceExtending = tagCompound.getInteger("DistanceExtending");
         super.readFromNBT(tagCompound);
     }
-
-    @Override
-    public float getShadowSize() {
-        return 0.0F;
-    }
-
-
 }
