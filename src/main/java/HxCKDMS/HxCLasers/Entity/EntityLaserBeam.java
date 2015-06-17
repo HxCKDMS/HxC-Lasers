@@ -1,6 +1,7 @@
 package HxCKDMS.HxCLasers.Entity;
 
 import HxCKDMS.HxCLasers.Api.ILaser;
+import net.minecraft.block.Block;
 import net.minecraft.entity.Entity;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.tileentity.TileEntity;
@@ -55,6 +56,9 @@ public class EntityLaserBeam extends Entity {
     }
 
     public boolean canExist() {
+        Block block = worldObj.getBlock((int)Math.floor(posX), (int)Math.floor(posY), (int)Math.floor(posZ));
+        if(block.isOpaqueCube()) return false;
+
         AxisAlignedBB axisAlignedBB = boundingBox.copy();
         axisAlignedBB.offset(direction.getOpposite().offsetX, direction.getOpposite().offsetY, direction.getOpposite().offsetZ);
 
@@ -71,20 +75,26 @@ public class EntityLaserBeam extends Entity {
     }
 
     public boolean canBePlaced() {
+        Block block = worldObj.getBlock((int)Math.floor(posX) + direction.offsetX, (int)Math.floor(posY) + direction.offsetY, (int)Math.floor(posZ) + direction.offsetZ);
+        if(block.isOpaqueCube()) return false;
+
         AxisAlignedBB axisAlignedBB = boundingBox.copy();
         axisAlignedBB.offset(direction.offsetX, direction.offsetY, direction.offsetZ);
 
         List entityList = worldObj.getEntitiesWithinAABB(EntityLaserBeam.class, axisAlignedBB);
         if(entityList.size() == 0) return true;
+
+        boolean canBePlaced = true;
+
         for(Object object : entityList){
             if (object instanceof EntityLaserBeam) {
                 EntityLaserBeam entityLaserBeam = (EntityLaserBeam) object;
-                if (entityLaserBeam.uuid != uuid) {
-                    return true;
+                if (entityLaserBeam.uuid == uuid) {
+                    canBePlaced = false;
                 }
             }
         }
-        return false;
+        return canBePlaced;
     }
 
     @Override
@@ -103,12 +113,11 @@ public class EntityLaserBeam extends Entity {
 
             dataWatcher.updateObject(29, (float) posY);
         }else{
-            System.out.println(posY);
-
             direction = ForgeDirection.getOrientation(dataWatcher.getWatchableObjectInt(30));
             shouldDrawTop = dataWatcher.getWatchableObjectByte(31) == 1;
 
             posY = dataWatcher.getWatchableObjectFloat(29);
+            lastTickPosY = dataWatcher.getWatchableObjectFloat(29);
         }
     }
 
