@@ -24,9 +24,6 @@ public class EntityLaserBeam extends Entity {
     public EntityLaserBeam(World world) {
         super(world);
         noClip = true;
-        /*this.uuid = UUID.randomUUID();
-        this.direction = ForgeDirection.UP;
-        this.distanceExtending = 2;*/
     }
 
     public EntityLaserBeam(World world, double x, double y, double z, UUID uuid, ForgeDirection direction, int distanceExtending, Color color) {
