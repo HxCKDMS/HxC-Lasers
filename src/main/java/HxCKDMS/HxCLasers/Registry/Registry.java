@@ -1,21 +1,24 @@
 package HxCKDMS.HxCLasers.Registry;
 
+import HxCKDMS.HxCLasers.Api.LensRegistry;
 import HxCKDMS.HxCLasers.Blocks.BlockLaser;
 import HxCKDMS.HxCLasers.Blocks.BlockLensMaker;
 import HxCKDMS.HxCLasers.Entity.EntityLaserBeam;
 import HxCKDMS.HxCLasers.HxCLasers;
 import HxCKDMS.HxCLasers.Items.ItemLens;
+import HxCKDMS.HxCLasers.Lenses.LensRed;
+import HxCKDMS.HxCLasers.Lenses.LensWhite;
 import HxCKDMS.HxCLasers.TileEntities.TileEntityLaser;
 import HxCKDMS.HxCLasers.TileEntities.TileEntityLensMaker;
 import cpw.mods.fml.common.registry.EntityRegistry;
 import cpw.mods.fml.common.registry.GameRegistry;
 import net.minecraft.block.Block;
 import net.minecraft.block.material.Material;
-import net.minecraft.entity.Entity;
-import net.minecraft.entity.EntityList;
 import net.minecraft.item.Item;
 
-import static HxCKDMS.HxCLasers.Lib.References.*;
+import java.awt.*;
+
+import static HxCKDMS.HxCLasers.Lib.References.MOD_ID;
 
 public class Registry {
     public static final CreativeTabHxCLasers creativeTabHxCLasers = new CreativeTabHxCLasers("HxCLasers");
@@ -34,6 +37,7 @@ public class Registry {
     }
     public static void init() {
         registerEntities();
+        registerLenses();
     }
 
     private static void registerBlocks(){
@@ -51,15 +55,11 @@ public class Registry {
     }
 
     private static void registerEntities(){
-        registerEntity(EntityLaserBeam.class, "EntityLaserBeam", 0xFF0000, 0xFF00FF);
+        EntityRegistry.registerModEntity(EntityLaserBeam.class, "EntityLaserBeam", 0, HxCLasers.instance, 64, 1, false);
     }
 
-    @SuppressWarnings("unchecked")
-    private static void registerEntity(Class<? extends Entity> entityClass, String entityName, int eggColor1, int eggColor2){
-        int entityID = EntityRegistry.findGlobalUniqueEntityId();
-
-        EntityRegistry.registerGlobalEntityID(entityClass, entityName, entityID);
-        EntityRegistry.registerModEntity(entityClass, entityName, entityID, HxCLasers.instance, 64, 1, false);
-        EntityList.entityEggs.put(entityID, new EntityList.EntityEggInfo(entityID, eggColor1, eggColor2));
+    private static void registerLenses(){
+        LensRegistry.registerLensHandler(Color.white, new LensWhite());
+        LensRegistry.registerLensHandler(Color.red, new LensRed());
     }
 }

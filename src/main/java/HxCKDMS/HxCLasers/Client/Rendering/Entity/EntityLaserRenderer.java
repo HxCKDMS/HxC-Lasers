@@ -18,10 +18,10 @@ public class EntityLaserRenderer extends RenderEntity{
 
     @Override
     public void doRender(Entity entity, double x, double y, double z, float yaw, float pitch) {
-        doRender((EntityLaserBeam) entity, x, y, z, yaw, pitch);
+        doRender((EntityLaserBeam) entity, x, y, z);
     }
 
-    private void doRender(EntityLaserBeam entityLaserBeam, double x, double y, double z, float yaw, float pitch){
+    private void doRender(EntityLaserBeam entityLaserBeam, double x, double y, double z){
         ForgeDirection direction = entityLaserBeam.direction;
         boolean goNorth = (direction == ForgeDirection.NORTH || direction == ForgeDirection.SOUTH);
         boolean goEast = (direction == ForgeDirection.EAST || direction == ForgeDirection.WEST);
@@ -46,7 +46,7 @@ public class EntityLaserRenderer extends RenderEntity{
             {
                 tessellator.setBrightness(15728880);
                 GL11.glBlendFunc(GL11.GL_SRC_ALPHA, GL11.GL_ONE_MINUS_SRC_ALPHA);
-                GL11.glColor4f(0, 1, 1, 0.5F);
+                GL11.glColor4f(entityLaserBeam.color.getRed()/255F, entityLaserBeam.color.getGreen()/255F, entityLaserBeam.color.getBlue()/255F, 0.5F);
 
                 bindTexture(textureLaserBeam);
 
@@ -100,4 +100,6 @@ public class EntityLaserRenderer extends RenderEntity{
     public void doRenderShadowAndFire(Entity entity, double x, double y, double z, float yaw, float pitch) {
 
     }
+
+
 }

@@ -4,6 +4,6 @@ import net.minecraft.entity.Entity;
 import net.minecraft.world.World;
 
 public interface ILensHandler {
-    void entityInterract(LensUpgrade[] lensUpgrades, Entity entity);
-    void blockInterract(LensUpgrade[] lensUpgrades, int x, int y, int z, World world);
+    void entityInteract(LensUpgrade[] lensUpgrades, Entity entity);
+    void blockInteract(LensUpgrade[] lensUpgrades, int x, int y, int z, World world);
 }

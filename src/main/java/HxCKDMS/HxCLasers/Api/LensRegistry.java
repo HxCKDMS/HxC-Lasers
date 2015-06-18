@@ -10,15 +10,15 @@ import java.util.HashMap;
 @SuppressWarnings("unused")
 public class LensRegistry {
     private static HashMap<ItemStack, LensUpgrade> lensUpgrades = new HashMap<>();
-    private static HashMap<Color, ILensHandler> lensHandlers = new HashMap<>();
+    private static HashMap<Integer, ILensHandler> lensHandlers = new HashMap<>();
 
     //LENS HANDLERS
     public static void registerLensHandler(Color color, ILensHandler lensHandler){
-        lensHandlers.put(color, lensHandler);
+        lensHandlers.put(color.getRGB(), lensHandler);
     }
 
     public static ILensHandler getLensHandler(Color color){
-        return lensHandlers.get(color);
+        return lensHandlers.get(color.getRGB());
     }
 
     //LENS UPGRADES
@@ -51,7 +51,7 @@ public class LensRegistry {
         return lensUpgrades;
     }
 
-    public static HashMap<Color, ILensHandler> getLensHandlers() {
+    public static HashMap<Integer, ILensHandler> getLensHandlers() {
         return lensHandlers;
     }
 

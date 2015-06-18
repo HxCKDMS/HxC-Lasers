@@ -8,6 +8,7 @@ import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.AxisAlignedBB;
 import net.minecraftforge.common.util.ForgeDirection;
 
+import java.awt.*;
 import java.util.List;
 import java.util.UUID;
 
@@ -26,7 +27,7 @@ public class TileEntityLaser extends TileEntity implements ILaser {
             if(isPowered && canPlaceLaser()) {
                 ForgeDirection direction = ForgeDirection.getOrientation(getBlockMetadata());
 
-                worldObj.spawnEntityInWorld(new EntityLaserBeam(worldObj, xCoord + 0.5 + direction.offsetX, yCoord + direction.offsetY, zCoord + 0.5 + direction.offsetZ, uuid, direction, 4));
+                worldObj.spawnEntityInWorld(new EntityLaserBeam(worldObj, xCoord + 0.5 + direction.offsetX, yCoord + direction.offsetY, zCoord + 0.5 + direction.offsetZ, uuid, direction, 4, new Color(0xFF0000)));
             }
         }
     }
@@ -79,4 +80,6 @@ public class TileEntityLaser extends TileEntity implements ILaser {
         }
         return canBePlaced;
     }
+
+
 }
