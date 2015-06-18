@@ -3,6 +3,7 @@ package HxCKDMS.HxCLasers.Entity;
 import HxCKDMS.HxCLasers.Api.ILaser;
 import net.minecraft.block.Block;
 import net.minecraft.entity.Entity;
+import net.minecraft.entity.EntityLiving;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.AxisAlignedBB;
@@ -106,6 +107,17 @@ public class EntityLaserBeam extends Entity {
                 worldObj.spawnEntityInWorld(new EntityLaserBeam(worldObj, posX + direction.offsetX, posY + direction.offsetY, posZ + direction.offsetZ, uuid, direction, distanceExtending - 1));
             }
 
+            AxisAlignedBB axisAlignedBB = AxisAlignedBB.getBoundingBox(boundingBox.minX + 0.4, boundingBox.minY, boundingBox.minZ + 0.4, boundingBox.maxX - 0.4, boundingBox.maxY, boundingBox.maxZ - 0.4);
+
+            List entityList = worldObj.getEntitiesWithinAABBExcludingEntity(this, axisAlignedBB);
+
+            for(Object object : entityList){
+                if(object instanceof EntityLiving){
+                    EntityLiving living = (EntityLiving) object;
+                    living.setFire(5);
+                }
+            }
+
             shouldDrawTop = distanceExtending == 0;
 
             dataWatcher.updateObject(30, direction.ordinal());
@@ -145,5 +157,10 @@ public class EntityLaserBeam extends Entity {
         direction = ForgeDirection.getOrientation(tagCompound.getInteger("Direction"));
         distanceExtending = tagCompound.getInteger("DistanceExtending");
         super.readFromNBT(tagCompound);
+    }
+
+    @Override
+    public boolean shouldRenderInPass(int pass) {
+        return pass == 1;
     }
 }
