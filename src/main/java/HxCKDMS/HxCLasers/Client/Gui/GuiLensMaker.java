@@ -3,9 +3,11 @@ package HxCKDMS.HxCLasers.Client.Gui;
 import HxCKDMS.HxCLasers.Containers.ContainerLensMaker;
 import HxCKDMS.HxCLasers.HxCLasers;
 import HxCKDMS.HxCLasers.Lib.References;
+import HxCKDMS.HxCLasers.Network.PackLensMakerStart;
 import HxCKDMS.HxCLasers.Network.PacketLensMakerSync;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
+import net.minecraft.client.gui.GuiButton;
 import net.minecraft.client.gui.inventory.GuiContainer;
 import net.minecraft.util.ResourceLocation;
 import org.lwjgl.opengl.GL11;
@@ -37,6 +39,16 @@ public class GuiLensMaker extends GuiContainer {
     }
 
     @Override
+    public void initGui() {
+        super.initGui();
+
+        int xStart = (width - xSize) / 2;
+        int yStart = (height - ySize) / 2;
+
+        buttonList.add(new GuiButton(0, xStart + 80, yStart + 42, 28, 11, "Start"));
+    }
+
+    @Override
     protected void drawGuiContainerBackgroundLayer(float opacity, int x, int y) {
         GL11.glColor4f(1f, 1f, 1f, 1f);
         mc.getTextureManager().bindTexture(new ResourceLocation(References.RESOURCE_LOCATION + "textures/gui/guiLensMaker.png"));
@@ -65,8 +77,6 @@ public class GuiLensMaker extends GuiContainer {
                 if(x >= xStart + 8 && x <= xStart + 23) red_percentage = percent;
                 else if(x >= xStart + 35 && x <= xStart + 50) green_percentage = percent;
                 else if(x >= xStart + 62 && x <= xStart + 77) blue_percentage = percent;
-
-                HxCLasers.packetPipeline.sendToServer(new PacketLensMakerSync(x, y, z, red_percentage, green_percentage, blue_percentage));
             }
         }
         super.mouseClicked(x, y, button);
@@ -104,8 +114,6 @@ public class GuiLensMaker extends GuiContainer {
             dragging_red = false;
             dragging_green = false;
             dragging_blue = false;
-
-            HxCLasers.packetPipeline.sendToServer(new PacketLensMakerSync(x, y, z, red_percentage, green_percentage, blue_percentage));
         }
 
         super.mouseMovedOrUp(x, y, which);
@@ -119,5 +127,10 @@ public class GuiLensMaker extends GuiContainer {
         super.onGuiClosed();
     }
 
-
+    @Override
+    protected void actionPerformed(GuiButton button) {
+        if(button.id == 0){
+            HxCLasers.packetPipeline.sendToServer(new PackLensMakerStart(x, y, z));
+        }
+    }
 }

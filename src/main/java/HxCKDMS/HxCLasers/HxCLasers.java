@@ -3,6 +3,7 @@ package HxCKDMS.HxCLasers;
 import HxCKDMS.HxCCore.api.Utils.LogHelper;
 import HxCKDMS.HxCCore.network.PacketPipeline;
 import HxCKDMS.HxCLasers.Handlers.GuiHandler;
+import HxCKDMS.HxCLasers.Network.PackLensMakerStart;
 import HxCKDMS.HxCLasers.Network.PacketLensMakerSync;
 import HxCKDMS.HxCLasers.Proxy.IProxy;
 import HxCKDMS.HxCLasers.Registry.Registry;
@@ -51,5 +52,6 @@ public class HxCLasers {
 
     private void registerPackets(){
         packetPipeline.addPacket(PacketLensMakerSync.class);
+        packetPipeline.addPacket(PackLensMakerStart.class);
     }
 }

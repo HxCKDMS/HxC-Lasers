@@ -1,10 +1,11 @@
 package HxCKDMS.HxCLasers.Api;
 
+import net.minecraft.item.ItemStack;
+
 import java.awt.*;
 
 public interface ILens {
-    int getRed();
-    int getGreen();
-    int getBlue();
-    Color getColor();
+    Color getColor(ItemStack stack);
+
+    void setColor(ItemStack stack, Color color);
 }

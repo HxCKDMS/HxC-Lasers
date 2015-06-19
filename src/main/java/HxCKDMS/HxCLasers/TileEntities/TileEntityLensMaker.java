@@ -13,6 +13,7 @@ public class TileEntityLensMaker extends TileEntity implements IInventory {
     public float red_percentage = 0;
     public float green_percentage = 0;
     public float blue_percentage = 0;
+    public boolean canStart = false;
 
     @Override
     public int getSizeInventory() {
@@ -71,7 +72,9 @@ public class TileEntityLensMaker extends TileEntity implements IInventory {
 
     @Override
     public void updateEntity() {
+        if(!worldObj.isRemote){
 
+        }
     }
 
     @Override
