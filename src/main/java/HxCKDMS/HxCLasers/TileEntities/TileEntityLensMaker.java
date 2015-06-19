@@ -1,7 +1,8 @@
 package HxCKDMS.HxCLasers.TileEntities;
 
+import HxCKDMS.HxCLasers.Api.ILens;
 import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.inventory.IInventory;
+import net.minecraft.inventory.ISidedInventory;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.network.NetworkManager;
@@ -9,40 +10,77 @@ import net.minecraft.network.Packet;
 import net.minecraft.network.play.server.S35PacketUpdateTileEntity;
 import net.minecraft.tileentity.TileEntity;
 
-public class TileEntityLensMaker extends TileEntity implements IInventory {
+public class TileEntityLensMaker extends TileEntity implements ISidedInventory {
     public float red_percentage = 0;
     public float green_percentage = 0;
     public float blue_percentage = 0;
     public boolean canStart = false;
 
+    private ItemStack[] slots = new ItemStack[10];
+
+    public int ticksRemaining = 0;
+
+    @Override
+    public int[] getAccessibleSlotsFromSide(int side) {
+        return new int[0];
+    }
+
+    @Override
+    public boolean canInsertItem(int slot, ItemStack itemStack, int side) {
+        return isItemValidForSlot(slot, itemStack);
+    }
+
+    @Override
+    public boolean canExtractItem(int slot, ItemStack itemStack, int side) {
+        return slot == 9;
+    }
+
     @Override
     public int getSizeInventory() {
-        return 0;
+        return slots.length;
     }
 
     @Override
-    public ItemStack getStackInSlot(int p_70301_1_) {
-        return null;
+    public ItemStack getStackInSlot(int slot) {
+        return slots[slot];
     }
 
     @Override
-    public ItemStack decrStackSize(int p_70298_1_, int p_70298_2_) {
-        return null;
+    public ItemStack decrStackSize(int slot, int amount) {
+        ItemStack itemStack = getStackInSlot(slot);
+        if(itemStack != null){
+            if(itemStack.stackSize <= amount){
+                setInventorySlotContents(slot, null);
+            }else{
+                itemStack = itemStack.splitStack(amount);
+                if(itemStack.stackSize == 0){
+                    setInventorySlotContents(slot, null);
+                }
+            }
+        }
+        return itemStack;
     }
 
     @Override
-    public ItemStack getStackInSlotOnClosing(int p_70304_1_) {
-        return null;
+    public ItemStack getStackInSlotOnClosing(int slot) {
+        ItemStack itemStack = getStackInSlot(slot);
+        if(itemStack != null){
+            setInventorySlotContents(slot, null);
+        }
+        return itemStack;
     }
 
     @Override
-    public void setInventorySlotContents(int p_70299_1_, ItemStack p_70299_2_) {
-
+    public void setInventorySlotContents(int slot, ItemStack itemStack) {
+        slots[slot] = itemStack;
+        if(itemStack != null && itemStack.stackSize > getInventoryStackLimit()){
+            itemStack.stackSize = getInventoryStackLimit();
+        }
     }
 
     @Override
     public String getInventoryName() {
-        return null;
+        return "LensMaker";
     }
 
     @Override
@@ -52,11 +90,11 @@ public class TileEntityLensMaker extends TileEntity implements IInventory {
 
     @Override
     public int getInventoryStackLimit() {
-        return 0;
+        return 64;
     }
 
     @Override
-    public boolean isUseableByPlayer(EntityPlayer p_70300_1_) {
+    public boolean isUseableByPlayer(EntityPlayer player) {
         return true;
     }
 
@@ -73,13 +111,19 @@ public class TileEntityLensMaker extends TileEntity implements IInventory {
     @Override
     public void updateEntity() {
         if(!worldObj.isRemote){
+            if(canStart){
+                ticksRemaining = 3600;
+            }
 
+            if(ticksRemaining > 0){
+                ticksRemaining--;
+            }
         }
     }
 
     @Override
-    public boolean isItemValidForSlot(int p_94041_1_, ItemStack p_94041_2_) {
-        return false;
+    public boolean isItemValidForSlot(int slot, ItemStack itemStack) {
+        return slot != 9 || itemStack.getItem() instanceof ILens;
     }
 
     @Override

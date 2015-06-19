@@ -20,6 +20,6 @@ public class LensUpgrade {
     public enum UpgradeType{
         RANGE,
         POWER,
-        TRNSPARANCY
+        TRANSPARENCY
     }
 }

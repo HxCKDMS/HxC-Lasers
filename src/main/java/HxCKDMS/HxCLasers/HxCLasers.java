@@ -1,6 +1,5 @@
 package HxCKDMS.HxCLasers;
 
-import HxCKDMS.HxCCore.api.Utils.LogHelper;
 import HxCKDMS.HxCCore.network.PacketPipeline;
 import HxCKDMS.HxCLasers.Handlers.GuiHandler;
 import HxCKDMS.HxCLasers.Network.PackLensMakerStart;
@@ -30,8 +29,6 @@ public class HxCLasers {
     public void preInit(FMLPreInitializationEvent event){
         Registry.preInit();
         proxy.preInit(event);
-
-        LogHelper.info("Thank you for using HxC Lasers", MOD_ID);
     }
 
     @Mod.EventHandler

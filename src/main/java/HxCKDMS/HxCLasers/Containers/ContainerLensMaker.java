@@ -1,10 +1,12 @@
 package HxCKDMS.HxCLasers.Containers;
 
+import HxCKDMS.HxCLasers.Slots.SlotLensMaker;
 import HxCKDMS.HxCLasers.TileEntities.TileEntityLensMaker;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.InventoryPlayer;
 import net.minecraft.inventory.Container;
 import net.minecraft.inventory.Slot;
+import net.minecraft.item.ItemStack;
 
 public class ContainerLensMaker extends Container {
     public TileEntityLensMaker tileEntityLensMaker;
@@ -31,17 +33,18 @@ public class ContainerLensMaker extends Container {
     }
 
     private void addSlotsToContainer(TileEntityLensMaker tileEntityLensMaker){
-        addSlotToContainer(new Slot(tileEntityLensMaker, 0, 8, 62)); //Red gem slot
-        addSlotToContainer(new Slot(tileEntityLensMaker, 1, 35, 62)); //Green gem slot
-        addSlotToContainer(new Slot(tileEntityLensMaker, 2, 62, 62)); //Blue gem slot
+        //0-2 gem slots red -> green -> blue
+        for(int x = 0; x < 3; x++){
+            addSlotToContainer(new SlotLensMaker(tileEntityLensMaker, x, 8 + 27 * x, 62, SlotLensMaker.SlotType.GEM));
+        }
 
         //3-8 update slots
         for(int x = 0; x < 3; x++){
             for(int y = 0; y < 2; y++){
-                addSlotToContainer(new Slot(tileEntityLensMaker, 3 + x + y * 2, 82 + x * 20, 5 + y * 19));
+                addSlotToContainer(new SlotLensMaker(tileEntityLensMaker, 3 + x + y * 3, 82 + x * 20, 5 + y * 19, SlotLensMaker.SlotType.UPGRADE));
             }
         }
-
+        addSlotToContainer(new SlotLensMaker(tileEntityLensMaker, 9, 103, 65, SlotLensMaker.SlotType.LENS)); //Lens slot
     }
 
     @Override
@@ -49,5 +52,8 @@ public class ContainerLensMaker extends Container {
         return true;
     }
 
-
+    @Override
+    public ItemStack transferStackInSlot(EntityPlayer player, int slot) {
+        return null;
+    }
 }

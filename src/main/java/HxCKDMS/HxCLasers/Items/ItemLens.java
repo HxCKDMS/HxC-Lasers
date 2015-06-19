@@ -16,9 +16,7 @@ public class ItemLens extends Item implements ILens{
 
     @Override
     public Color getColor(ItemStack stack) {
-        if(!stack.hasTagCompound()){
-            stack.stackTagCompound = new NBTTagCompound();
-        }
+        if(!stack.hasTagCompound()) return Color.white;
         return new Color(stack.stackTagCompound.getInteger("Red"), stack.stackTagCompound.getInteger("Green"), stack.stackTagCompound.getInteger("Blue"));
     }
 

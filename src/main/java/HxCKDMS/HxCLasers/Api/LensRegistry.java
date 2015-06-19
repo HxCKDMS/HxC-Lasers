@@ -6,6 +6,7 @@ import net.minecraft.item.ItemStack;
 
 import java.awt.*;
 import java.util.HashMap;
+import java.util.Iterator;
 
 @SuppressWarnings("unused")
 public class LensRegistry {
@@ -43,7 +44,27 @@ public class LensRegistry {
     }
 
     public static LensUpgrade getLensUpgrade(ItemStack stack){
-        return lensUpgrades.get(stack);
+        Iterator<ItemStack> iterator = lensUpgrades.keySet().iterator();
+        do{
+            ItemStack stack2 = iterator.next();
+            if(matchItemStacks(stack, stack2)){
+                return lensUpgrades.get(stack2);
+            }
+        }while(iterator.hasNext());
+
+        return null;
+    }
+
+    public static boolean isItemUpgrade(ItemStack stack){
+        Iterator<ItemStack> iterator = lensUpgrades.keySet().iterator();
+        do{
+            ItemStack stack2 = iterator.next();
+            if(matchItemStacks(stack, stack2)){
+                return true;
+            }
+        }while(iterator.hasNext());
+
+        return false;
     }
 
     //GETTERS
@@ -54,6 +75,7 @@ public class LensRegistry {
     public static HashMap<Integer, ILensHandler> getLensHandlers() {
         return lensHandlers;
     }
-
-
+    private static boolean matchItemStacks(ItemStack stack1, ItemStack stack2){
+        return (stack1.getItem() == stack2.getItem() && stack1.getItemDamage() == stack2.getItemDamage() && stack1.stackTagCompound == stack2.stackTagCompound);
+    }
 }
