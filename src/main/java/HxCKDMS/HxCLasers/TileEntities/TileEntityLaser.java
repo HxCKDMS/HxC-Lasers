@@ -1,8 +1,10 @@
 package HxCKDMS.HxCLasers.TileEntities;
 
 import HxCKDMS.HxCLasers.Api.ILaser;
+import HxCKDMS.HxCLasers.Api.ILens;
 import HxCKDMS.HxCLasers.Entity.EntityLaserBeam;
 import net.minecraft.block.Block;
+import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.AxisAlignedBB;
@@ -16,6 +18,8 @@ public class TileEntityLaser extends TileEntity implements ILaser {
     boolean isPowered = false;
     UUID uuid;
 
+    public ItemStack lens;
+
     public TileEntityLaser() {}
 
     @Override
@@ -27,7 +31,12 @@ public class TileEntityLaser extends TileEntity implements ILaser {
             if(isPowered && canPlaceLaser()) {
                 ForgeDirection direction = ForgeDirection.getOrientation(getBlockMetadata());
 
-                worldObj.spawnEntityInWorld(new EntityLaserBeam(worldObj, xCoord + 0.5 + direction.offsetX, yCoord + direction.offsetY, zCoord + 0.5 + direction.offsetZ, uuid, direction, 4, new Color(0xFF0000)));
+                Color color = Color.white;
+                if(lens != null){
+                    color = ((ILens) lens.getItem()).getColor(lens);
+                }
+
+                worldObj.spawnEntityInWorld(new EntityLaserBeam(worldObj, xCoord + 0.5 + direction.offsetX, yCoord + direction.offsetY, zCoord + 0.5 + direction.offsetZ, uuid, direction, 4, color));
             }
         }
     }
@@ -75,6 +84,16 @@ public class TileEntityLaser extends TileEntity implements ILaser {
                 EntityLaserBeam entityLaserBeam = (EntityLaserBeam) object;
                 if (entityLaserBeam.uuid.toString().equals(uuid.toString())) {
                     canBePlaced = false;
+
+                    Color color = Color.white;
+                    if(lens != null){
+                        color = ((ILens) lens.getItem()).getColor(lens);
+                    }
+                    if(entityLaserBeam.color.getRGB() != color.getRGB()) {
+                        isPowered = false;
+                        uuid = UUID.randomUUID();
+                        return true;
+                    }
                 }
             }
         }

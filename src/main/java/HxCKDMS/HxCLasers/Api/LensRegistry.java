@@ -44,6 +44,8 @@ public class LensRegistry {
     }
 
     public static LensUpgrade getLensUpgrade(ItemStack stack){
+        if(stack == null) return null;
+
         Iterator<ItemStack> iterator = lensUpgrades.keySet().iterator();
         do{
             ItemStack stack2 = iterator.next();

@@ -33,8 +33,6 @@ public class SlotLensMaker extends Slot {
         return !(lensMaker.ticksRemaining > 0);
     }
 
-
-
     public enum SlotType{
         LENS,
         UPGRADE,

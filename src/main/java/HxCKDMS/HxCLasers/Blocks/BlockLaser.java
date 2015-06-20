@@ -1,5 +1,6 @@
 package HxCKDMS.HxCLasers.Blocks;
 
+import HxCKDMS.HxCLasers.Api.ILens;
 import HxCKDMS.HxCLasers.Lib.References;
 import HxCKDMS.HxCLasers.TileEntities.TileEntityLaser;
 import cpw.mods.fml.relauncher.Side;
@@ -10,6 +11,7 @@ import net.minecraft.block.material.Material;
 import net.minecraft.client.renderer.texture.IIconRegister;
 import net.minecraft.creativetab.CreativeTabs;
 import net.minecraft.entity.EntityLivingBase;
+import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.IIcon;
@@ -54,5 +56,12 @@ public class BlockLaser extends BlockContainer {
     @Override
     public void onBlockPlacedBy(World world, int x, int y, int z, EntityLivingBase player, ItemStack stack) {
         world.setBlockMetadataWithNotify(x, y, z, BlockPistonBase.determineOrientation(world, x, y, z, player), 2);
+    }
+
+    @Override
+    public boolean onBlockActivated(World world, int x, int y, int z, EntityPlayer player, int side, float bx, float by, float bz) {
+        TileEntityLaser tileEntityLaser = (TileEntityLaser) world.getTileEntity(x, y, z);
+        if(player.inventory.getCurrentItem() != null && player.inventory.getCurrentItem().getItem() instanceof ILens) tileEntityLaser.lens = player.inventory.getCurrentItem();
+        return true;
     }
 }
