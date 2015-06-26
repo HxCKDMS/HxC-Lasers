@@ -19,8 +19,6 @@ public class TileEntityLaser extends TileEntity implements ILaser {
 
     public ItemStack lens;
 
-    public TileEntityLaser() {}
-
     @Override
     public void updateEntity() {
         if(!worldObj.isRemote){
