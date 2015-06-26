@@ -15,8 +15,8 @@ import java.util.List;
 import java.util.UUID;
 
 public class TileEntityLaser extends TileEntity implements ILaser {
-    boolean isPowered = false;
-    UUID uuid;
+    public boolean isPowered = false;
+    public UUID uuid;
 
     public ItemStack lens;
 
@@ -45,6 +45,7 @@ public class TileEntityLaser extends TileEntity implements ILaser {
     public void readFromNBT(NBTTagCompound tagCompound) {
         isPowered = tagCompound.getBoolean("IsPowered");
         uuid = UUID.fromString(tagCompound.getString("UUID"));
+        lens = ItemStack.loadItemStackFromNBT(tagCompound.getCompoundTag("Lens"));
 
         super.readFromNBT(tagCompound);
     }
@@ -53,6 +54,7 @@ public class TileEntityLaser extends TileEntity implements ILaser {
     public void writeToNBT(NBTTagCompound tagCompound) {
         tagCompound.setBoolean("IsPowered", isPowered);
         tagCompound.setString("UUID", uuid.toString());
+        if(lens != null) tagCompound.setTag("Lens", lens.writeToNBT(new NBTTagCompound()));
 
         super.writeToNBT(tagCompound);
     }
@@ -64,6 +66,9 @@ public class TileEntityLaser extends TileEntity implements ILaser {
 
     @Override
     public boolean canPlaceLaser() {
+
+
+
         ForgeDirection direction = ForgeDirection.getOrientation(getBlockMetadata());
 
         Block block = worldObj.getBlock(xCoord + direction.offsetX, yCoord + direction.offsetY, zCoord + direction.offsetZ);
@@ -79,18 +84,17 @@ public class TileEntityLaser extends TileEntity implements ILaser {
 
         boolean canBePlaced = true;
 
-        for(Object object : entityList){
+        for(Object object : entityList) {
             if (object instanceof EntityLaserBeam) {
                 EntityLaserBeam entityLaserBeam = (EntityLaserBeam) object;
                 if (entityLaserBeam.uuid.toString().equals(uuid.toString())) {
                     canBePlaced = false;
 
                     Color color = Color.white;
-                    if(lens != null){
-                        color = ((ILens) lens.getItem()).getColor(lens);
-                    }
+                    if(lens != null) color = ((ILens) lens.getItem()).getColor(lens);
+
                     if(entityLaserBeam.color.getRGB() != color.getRGB()) {
-                        isPowered = false;
+                        //isPowered = false;
                         uuid = UUID.randomUUID();
                         return true;
                     }
@@ -100,5 +104,8 @@ public class TileEntityLaser extends TileEntity implements ILaser {
         return canBePlaced;
     }
 
-
+    @Override
+    public UUID getUUID() {
+        return uuid;
+    }
 }

@@ -1,7 +1,7 @@
 package HxCKDMS.HxCLasers.Slots;
 
 import HxCKDMS.HxCLasers.Api.ILens;
-import HxCKDMS.HxCLasers.Api.LensRegistry;
+import HxCKDMS.HxCLasers.Api.LaserRegistry;
 import HxCKDMS.HxCLasers.TileEntities.TileEntityLensMaker;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.inventory.IInventory;
@@ -23,7 +23,7 @@ public class SlotLensMaker extends Slot {
     @Override
     public boolean isItemValid(ItemStack stack) {
         if(type == LENS) return stack.getItem() instanceof ILens;
-        else if (type == UPGRADE) return LensRegistry.isItemUpgrade(stack);
+        else if (type == UPGRADE) return LaserRegistry.isItemUpgrade(stack);
         else if(type == GEM) return true;
         return false;
     }

@@ -1,17 +1,13 @@
 package HxCKDMS.HxCLasers.Entity;
 
-import HxCKDMS.HxCLasers.Api.ILaser;
-import HxCKDMS.HxCLasers.Api.LensRegistry;
-import net.minecraft.block.Block;
+import HxCKDMS.HxCLasers.Api.LaserHandler;
+import HxCKDMS.HxCLasers.Api.LaserRegistry;
 import net.minecraft.entity.Entity;
 import net.minecraft.nbt.NBTTagCompound;
-import net.minecraft.tileentity.TileEntity;
-import net.minecraft.util.AxisAlignedBB;
 import net.minecraft.world.World;
 import net.minecraftforge.common.util.ForgeDirection;
 
 import java.awt.*;
-import java.util.List;
 import java.util.UUID;
 
 public class EntityLaserBeam extends Entity {
@@ -20,6 +16,9 @@ public class EntityLaserBeam extends Entity {
     public int distanceExtending;
     public boolean shouldDrawTop;
     public Color color;
+
+    private LaserHandler laserHandler;
+    private boolean first = true;
 
     public EntityLaserBeam(World world) {
         super(world);
@@ -59,92 +58,24 @@ public class EntityLaserBeam extends Entity {
 
     }
 
-    private boolean canExist() {
-        for(Object object : worldObj.getEntitiesWithinAABB(Entity.class, getLaserBoundingBox()))
-            if(color.getRGB() == Color.WHITE.getRGB() && object instanceof Entity && !(object instanceof EntityLaserBeam)) return false;
-
-
-        Block block = worldObj.getBlock((int)Math.floor(posX), (int)Math.floor(posY), (int)Math.floor(posZ));
-        if(block.isOpaqueCube()) return false;
-
-        AxisAlignedBB axisAlignedBB = boundingBox.copy();
-        axisAlignedBB.offset(direction.getOpposite().offsetX, direction.getOpposite().offsetY, direction.getOpposite().offsetZ);
-
-        for (Object object : worldObj.getEntitiesWithinAABB(EntityLaserBeam.class, axisAlignedBB)) {
-            if (object instanceof EntityLaserBeam) {
-                EntityLaserBeam entityLaserBeam = (EntityLaserBeam) object;
-                if (entityLaserBeam.uuid == uuid) {
-                    return true;
-                }
-            }
-        }
-        TileEntity tileEntity = worldObj.getTileEntity((int)Math.floor(posX) + direction.getOpposite().offsetX, (int)Math.floor(posY) + direction.getOpposite().offsetY, (int)Math.floor(posZ) + direction.getOpposite().offsetZ);
-        return tileEntity instanceof ILaser && ((ILaser)tileEntity).isOn();
-    }
-
-    private boolean canBePlaced() {
-        for(Object object : worldObj.getEntitiesWithinAABB(Entity.class, getLaserBoundingBox().offset(direction.offsetX, direction.offsetY, direction.offsetZ)))
-            if(color.getRGB() == Color.WHITE.getRGB() && object instanceof Entity && !(object instanceof EntityLaserBeam)) {
-                shouldDrawTop = true;
-                return false;
-            }
-
-        Block block = worldObj.getBlock((int)Math.floor(posX) + direction.offsetX, (int)Math.floor(posY) + direction.offsetY, (int)Math.floor(posZ) + direction.offsetZ);
-        if(block.isOpaqueCube()) {
-            shouldDrawTop = true;
-            return false;
-        }
-
-        AxisAlignedBB axisAlignedBB = boundingBox.copy();
-        axisAlignedBB.offset(direction.offsetX, direction.offsetY, direction.offsetZ);
-
-        List entityList = worldObj.getEntitiesWithinAABB(EntityLaserBeam.class, axisAlignedBB);
-        if(entityList.size() == 0) return true;
-
-        boolean canBePlaced = true;
-
-        for(Object object : entityList){
-            if (object instanceof EntityLaserBeam) {
-                EntityLaserBeam entityLaserBeam = (EntityLaserBeam) object;
-                if (entityLaserBeam.uuid == uuid) {
-                    canBePlaced = false;
-                }
-            }
-        }
-        return canBePlaced;
-    }
-
-    private void handleCollision(){
-        List entityList = worldObj.getEntitiesWithinAABB(Entity.class , getLaserBoundingBox());
-
-        for(Object object : entityList){
-            if(object instanceof Entity && !(object instanceof EntityLaserBeam)){
-                Entity entity = (Entity) object;
-                LensRegistry.getLensHandler(color).entityInteract(null, entity);
-            }
-        }
-    }
-
-    private AxisAlignedBB getLaserBoundingBox(){
-        double offsetX = (direction == ForgeDirection.UP || direction == ForgeDirection.DOWN || direction == ForgeDirection.NORTH || direction == ForgeDirection.SOUTH) ? 0.33 : 0;
-        double offsetY = (direction == ForgeDirection.EAST || direction == ForgeDirection.WEST || direction == ForgeDirection.NORTH || direction == ForgeDirection.SOUTH) ? 0.33 : 0;
-        double offsetZ = (direction == ForgeDirection.UP || direction == ForgeDirection.DOWN || direction == ForgeDirection.EAST || direction == ForgeDirection.WEST) ? 0.33 : 0;
-
-        return AxisAlignedBB.getBoundingBox(boundingBox.minX + offsetX, boundingBox.minY + offsetY, boundingBox.minZ + offsetZ, boundingBox.maxX - offsetX, boundingBox.maxY - offsetY, boundingBox.maxZ - offsetZ);
-    }
-
     @Override
     public void onUpdate() {
         if(!worldObj.isRemote){
-            if(!canExist()) setDead();
+            if(first) {
+                laserHandler = LaserRegistry.getLaserHandler(color);
+                laserHandler.laserBeam = this;
+                first = false;
+            }
+
+            if(!laserHandler.canExist()) setDead();
 
             shouldDrawTop = distanceExtending == 0;
 
-            if(distanceExtending > 0 && canBePlaced()){
+            if(distanceExtending > 0 && laserHandler.canBePlaced()){
                 worldObj.spawnEntityInWorld(new EntityLaserBeam(worldObj, posX + direction.offsetX, posY + direction.offsetY, posZ + direction.offsetZ, uuid, direction, distanceExtending - 1, color));
             }
 
-            handleCollision();
+            laserHandler.handleCollision();
 
             dataWatcher.updateObject(26, color.getRed());
             dataWatcher.updateObject(27, color.getGreen());
@@ -193,6 +124,7 @@ public class EntityLaserBeam extends Entity {
         direction = ForgeDirection.getOrientation(tagCompound.getInteger("Direction"));
         distanceExtending = tagCompound.getInteger("DistanceExtending");
         color = new Color(tagCompound.getInteger("Red"), tagCompound.getInteger("Green"), tagCompound.getInteger("Blue"));
+
         super.readFromNBT(tagCompound);
     }
 

@@ -1,7 +1,7 @@
 package HxCKDMS.HxCLasers.TileEntities;
 
 import HxCKDMS.HxCLasers.Api.ILens;
-import HxCKDMS.HxCLasers.Api.LensRegistry;
+import HxCKDMS.HxCLasers.Api.LaserRegistry;
 import HxCKDMS.HxCLasers.Api.LensUpgrade;
 import HxCKDMS.HxCLasers.Items.ItemLens;
 import net.minecraft.entity.player.EntityPlayer;
@@ -131,7 +131,7 @@ public class TileEntityLensMaker extends TileEntity implements ISidedInventory {
                     slots[9] = ((ItemLens)slots[9].getItem()).setColor(slots[9], new Color((int)(red_percentage * 255), (int)(green_percentage * 255), (int)(blue_percentage * 255)));
                     LensUpgrade[] lensUpgrades = new LensUpgrade[6];
                     for(int i = 3; i <= 8; i++){
-                        lensUpgrades[i - 3] = LensRegistry.getLensUpgrade(slots[i]);
+                        lensUpgrades[i - 3] = LaserRegistry.getLaserUpgrade(slots[i]);
                         slots[i] = null;
                     }
                     slots[9] = ((ItemLens)slots[9].getItem()).setUpgrades(slots[9], lensUpgrades);
