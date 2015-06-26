@@ -7,6 +7,8 @@ import HxCKDMS.HxCLasers.Blocks.BlockLensMaker;
 import HxCKDMS.HxCLasers.Entity.EntityLaserBeam;
 import HxCKDMS.HxCLasers.HxCLasers;
 import HxCKDMS.HxCLasers.Items.ItemLens;
+import HxCKDMS.HxCLasers.Lasers.LaserBlue;
+import HxCKDMS.HxCLasers.Lasers.LaserGreen;
 import HxCKDMS.HxCLasers.Lasers.LaserRed;
 import HxCKDMS.HxCLasers.Lasers.LaserWhite;
 import HxCKDMS.HxCLasers.TileEntities.TileEntityLaser;
@@ -65,6 +67,8 @@ public class Registry {
     private static void registerLenses(){
         LaserRegistry.registerLaserHandler(Color.white, LaserWhite.class);
         LaserRegistry.registerLaserHandler(Color.red, LaserRed.class);
+        LaserRegistry.registerLaserHandler(Color.green, LaserGreen.class);
+        LaserRegistry.registerLaserHandler(Color.blue, LaserBlue.class);
     }
 
     private static void registerLensUpgrades(){

@@ -104,9 +104,11 @@ public class LaserHandler {
         for(Object object : entityList){
             if(object instanceof Entity && !(object instanceof EntityLaserBeam)){
                 Entity entity = (Entity) object;
-                LaserRegistry.getLaserHandler(laserBeam.color).entityInteract(null, entity);
+                entityInteract(null, entity);
             }
         }
+
+        blockInteract(null, (int)Math.floor(laserBeam.posX), (int)Math.floor(laserBeam.posY), (int)Math.floor(laserBeam.posZ), laserBeam.worldObj);
     }
 
     public static AxisAlignedBB getLaserBoundingBox(ForgeDirection direction, AxisAlignedBB boundingBox){
