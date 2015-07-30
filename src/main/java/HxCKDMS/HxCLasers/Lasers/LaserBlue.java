@@ -7,6 +7,9 @@ import net.minecraft.entity.Entity;
 public class LaserBlue extends LaserHandler {
     @Override
     public void entityInteract(LensUpgrade[] lensUpgrades, Entity entity) {
-        entity.motionY = -0.01;
+        if(!entity.onGround && entity.motionY < 0.0D) {
+            entity.motionY *= 0.6D;
+            entity.fallDistance = 0;
+        }
     }
 }

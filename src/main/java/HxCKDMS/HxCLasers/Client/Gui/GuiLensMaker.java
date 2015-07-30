@@ -3,8 +3,8 @@ package HxCKDMS.HxCLasers.Client.Gui;
 import HxCKDMS.HxCLasers.Containers.ContainerLensMaker;
 import HxCKDMS.HxCLasers.HxCLasers;
 import HxCKDMS.HxCLasers.Lib.References;
-import HxCKDMS.HxCLasers.Network.PackLensMakerStart;
-import HxCKDMS.HxCLasers.Network.PacketLensMakerSync;
+import HxCKDMS.HxCLasers.Network.MessageLensMakerStart;
+import HxCKDMS.HxCLasers.Network.MessageLensMakerSync;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
 import net.minecraft.client.gui.GuiButton;
@@ -77,6 +77,7 @@ public class GuiLensMaker extends GuiContainer {
                 if(x >= xStart + 8 && x <= xStart + 23) red_percentage = percent;
                 else if(x >= xStart + 35 && x <= xStart + 50) green_percentage = percent;
                 else if(x >= xStart + 62 && x <= xStart + 77) blue_percentage = percent;
+                HxCLasers.network.sendToServer(new MessageLensMakerSync(x, y, z, red_percentage, green_percentage, blue_percentage));
             }
         }
         super.mouseClicked(x, y, button);
@@ -114,6 +115,8 @@ public class GuiLensMaker extends GuiContainer {
             dragging_red = false;
             dragging_green = false;
             dragging_blue = false;
+
+            HxCLasers.network.sendToServer(new MessageLensMakerSync(x, y, z, red_percentage, green_percentage, blue_percentage));
         }
 
         super.mouseMovedOrUp(x, y, which);
@@ -122,7 +125,7 @@ public class GuiLensMaker extends GuiContainer {
     @Override
     public void onGuiClosed() {
         if(!(mc.thePlayer.openContainer instanceof ContainerLensMaker)) {
-            HxCLasers.packetPipeline.sendToServer(new PacketLensMakerSync(x, y, z, red_percentage, green_percentage, blue_percentage));
+            HxCLasers.network.sendToServer(new MessageLensMakerSync(x, y, z, red_percentage, green_percentage, blue_percentage));
         }
         super.onGuiClosed();
     }
@@ -130,7 +133,8 @@ public class GuiLensMaker extends GuiContainer {
     @Override
     protected void actionPerformed(GuiButton button) {
         if(button.id == 0){
-            HxCLasers.packetPipeline.sendToServer(new PackLensMakerStart(x, y, z));
+            HxCLasers.network.sendToServer(new MessageLensMakerSync(x, y, z, red_percentage, green_percentage, blue_percentage));
+            HxCLasers.network.sendToServer(new MessageLensMakerStart(x, y, z));
         }
     }
 }

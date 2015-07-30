@@ -127,7 +127,7 @@ public class TileEntityLensMaker extends TileEntity implements ISidedInventory {
 
                 System.out.println(ticksRemaining);
 
-                if(ticksRemaining == 0){
+                if(ticksRemaining == 0 && slots[9] != null){
                     slots[9] = ((ItemLens)slots[9].getItem()).setColor(slots[9], new Color((int)(red_percentage * 255), (int)(green_percentage * 255), (int)(blue_percentage * 255)));
                     LensUpgrade[] lensUpgrades = new LensUpgrade[6];
                     for(int i = 3; i <= 8; i++){
