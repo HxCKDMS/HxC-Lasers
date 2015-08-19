@@ -27,7 +27,7 @@ public class TileEntityLensMaker extends TileEntity implements ISidedInventory {
     public int ticksRemaining = 0;
 
     @Override
-    public int[] getAccessibleSlotsFromSide(int side) {
+    public int[] getSlotsForFace(int side) {
         return new int[0];
     }
 
@@ -90,7 +90,7 @@ public class TileEntityLensMaker extends TileEntity implements ISidedInventory {
     }
 
     @Override
-    public boolean hasCustomInventoryName() {
+    public boolean isCustomInventoryName() {
         return false;
     }
 
@@ -105,12 +105,12 @@ public class TileEntityLensMaker extends TileEntity implements ISidedInventory {
     }
 
     @Override
-    public void openInventory() {
+    public void openChest() {
 
     }
 
     @Override
-    public void closeInventory() {
+    public void closeChest() {
 
     }
 
@@ -201,6 +201,6 @@ public class TileEntityLensMaker extends TileEntity implements ISidedInventory {
 
     @Override
     public void onDataPacket(NetworkManager net, S35PacketUpdateTileEntity pkt) {
-        readSyncableDataFromNBT(pkt.func_148857_g());
+        readSyncableDataFromNBT(pkt.getNbtCompound());
     }
 }

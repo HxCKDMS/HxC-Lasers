@@ -17,7 +17,6 @@ public class LaserWhite extends LaserHandler {
     public boolean canExist() {
         for(Object object : laserBeam.worldObj.getEntitiesWithinAABB(Entity.class, getLaserBoundingBox(laserBeam.direction, laserBeam.boundingBox)))
             if(object instanceof Entity && !(object instanceof EntityLaserBeam)) return false;
-
         return super.canExist();
     }
 
@@ -29,7 +28,6 @@ public class LaserWhite extends LaserHandler {
                 return false;
             }
         }
-
         return super.canBePlaced();
     }
 
@@ -38,19 +36,17 @@ public class LaserWhite extends LaserHandler {
         int xCoord = tileEntityLaser.xCoord;
         int yCoord = tileEntityLaser.yCoord;
         int zCoord = tileEntityLaser.zCoord;
-        World worldObj = tileEntityLaser.getWorldObj();
+        World worldObj = tileEntityLaser.getWorld();
 
         ForgeDirection direction = ForgeDirection.getOrientation(tileEntityLaser.getBlockMetadata());
 
         AxisAlignedBB axisAlignedBB = worldObj.getBlock(xCoord, yCoord, zCoord).getCollisionBoundingBoxFromPool(worldObj, xCoord, yCoord, zCoord);
         axisAlignedBB.offset(direction.offsetX, direction.offsetY, direction.offsetZ);
 
-        List entityList = tileEntityLaser.getWorldObj().getEntitiesWithinAABB(Entity.class, getLaserBoundingBox(direction, axisAlignedBB));
+        List entityList = tileEntityLaser.getWorld().getEntitiesWithinAABB(Entity.class, getLaserBoundingBox(direction, axisAlignedBB));
 
         for(Object object : entityList) if (object instanceof Entity && !(object instanceof EntityLaserBeam)) return false;
 
         return super.canBePlacedFromBlock(color, tileEntityLaser);
     }
-
-
 }

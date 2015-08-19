@@ -3,6 +3,7 @@ package HxCKDMS.HxCLasers.Entity;
 import HxCKDMS.HxCLasers.Api.LaserHandler;
 import HxCKDMS.HxCLasers.Api.LaserRegistry;
 import net.minecraft.entity.Entity;
+import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.world.World;
 import net.minecraftforge.common.util.ForgeDirection;
@@ -15,24 +16,22 @@ public class EntityLaserBeam extends Entity {
     public ForgeDirection direction;
     public int distanceExtending;
     public boolean shouldDrawTop;
-    public Color color;
+    public ItemStack lens;
 
     private LaserHandler laserHandler;
     private boolean first = true;
 
     public EntityLaserBeam(World world) {
         super(world);
-        noClip = true;
     }
 
-    public EntityLaserBeam(World world, double x, double y, double z, UUID uuid, ForgeDirection direction, int distanceExtending, Color color) {
+    public EntityLaserBeam(World world, double x, double y, double z, UUID uuid, ForgeDirection direction, int distanceExtending, ItemStack lens) {
         super(world);
         setPosition(x, y, z);
-        noClip = true;
         this.uuid = uuid;
         this.direction = direction;
         this.distanceExtending = distanceExtending;
-        this.color = color;
+        this.lens = lens;
     }
 
     @Override
@@ -61,6 +60,9 @@ public class EntityLaserBeam extends Entity {
     @Override
     public void onUpdate() {
         if(!worldObj.isRemote){
+            Color color = Color.white;
+            if(lens != null && lens.hasTagCompound()) color = new Color(lens.stackTagCompound.getInteger("Red"), lens.stackTagCompound.getInteger("Green"), lens.stackTagCompound.getInteger("Blue"));
+
             if(first) {
                 laserHandler = LaserRegistry.getLaserHandler(color);
                 laserHandler.laserBeam = this;
@@ -72,7 +74,7 @@ public class EntityLaserBeam extends Entity {
             shouldDrawTop = distanceExtending == 0;
 
             if(distanceExtending > 0 && laserHandler.canBePlaced()){
-                worldObj.spawnEntityInWorld(new EntityLaserBeam(worldObj, posX + direction.offsetX, posY + direction.offsetY, posZ + direction.offsetZ, uuid, direction, distanceExtending - 1, color));
+                worldObj.spawnEntityInWorld(new EntityLaserBeam(worldObj, posX + direction.offsetX, posY + direction.offsetY, posZ + direction.offsetZ, uuid, direction, distanceExtending - 1, lens));
             }
 
             laserHandler.handleCollision();
@@ -85,9 +87,7 @@ public class EntityLaserBeam extends Entity {
             dataWatcher.updateObject(31, shouldDrawTop ? (byte) 1 : (byte) 0);
 
             dataWatcher.updateObject(29, (float) posY);
-        }else{
-            color = new Color(dataWatcher.getWatchableObjectInt(26), dataWatcher.getWatchableObjectInt(27), dataWatcher.getWatchableObjectInt(28));
-
+        } else {
             direction = ForgeDirection.getOrientation(dataWatcher.getWatchableObjectInt(30));
             shouldDrawTop = dataWatcher.getWatchableObjectByte(31) == 1;
 
@@ -111,9 +111,7 @@ public class EntityLaserBeam extends Entity {
         tagCompound.setString("UUID", uuid.toString());
         tagCompound.setInteger("Direction", direction.ordinal());
         tagCompound.setInteger("DistanceExtending", distanceExtending);
-        tagCompound.setInteger("Red", color.getRed());
-        tagCompound.setInteger("Green", color.getGreen());
-        tagCompound.setInteger("Blue", color.getBlue());
+        if(lens != null) tagCompound.setTag("Lens", lens.writeToNBT(new NBTTagCompound()));
 
         super.writeToNBT(tagCompound);
     }
@@ -123,7 +121,7 @@ public class EntityLaserBeam extends Entity {
         uuid = UUID.fromString(tagCompound.getString("UUID"));
         direction = ForgeDirection.getOrientation(tagCompound.getInteger("Direction"));
         distanceExtending = tagCompound.getInteger("DistanceExtending");
-        color = new Color(tagCompound.getInteger("Red"), tagCompound.getInteger("Green"), tagCompound.getInteger("Blue"));
+        lens = ItemStack.loadItemStackFromNBT(tagCompound.getCompoundTag("Lens"));
 
         super.readFromNBT(tagCompound);
     }
@@ -132,5 +130,4 @@ public class EntityLaserBeam extends Entity {
     public boolean shouldRenderInPass(int pass) {
         return pass == 1;
     }
-
 }

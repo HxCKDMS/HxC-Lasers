@@ -9,6 +9,11 @@ public class LensUpgrade {
         this.amount = amount;
     }
 
+    public LensUpgrade(UpgradeType type) {
+        this.type = type;
+        this.amount = 0;
+    }
+
     public UpgradeType getType() {
         return type;
     }
@@ -20,6 +25,7 @@ public class LensUpgrade {
     public enum UpgradeType{
         RANGE,
         POWER,
-        TRANSPARENCY
+        TRANSPARENCY,
+        ADVANCED
     }
 }

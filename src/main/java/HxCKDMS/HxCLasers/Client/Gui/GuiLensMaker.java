@@ -110,7 +110,7 @@ public class GuiLensMaker extends GuiContainer {
     }
 
     @Override
-    protected void mouseMovedOrUp(int x, int y, int which) {
+    protected void mouseReleased(int x, int y, int which) {
         if(which == 0){
             dragging_red = false;
             dragging_green = false;
@@ -119,7 +119,7 @@ public class GuiLensMaker extends GuiContainer {
             HxCLasers.network.sendToServer(new MessageLensMakerSync(x, y, z, red_percentage, green_percentage, blue_percentage));
         }
 
-        super.mouseMovedOrUp(x, y, which);
+        super.mouseReleased(x, y, which);
     }
 
     @Override

@@ -1,7 +1,7 @@
 package HxCKDMS.HxCLasers.Blocks;
 
 import HxCKDMS.HxCLasers.HxCLasers;
-import HxCKDMS.HxCLasers.TileEntities.TileEntityLensMaker;
+import HxCKDMS.HxCLasers.TileEntities.TileEntityLensBench;
 import net.minecraft.block.BlockContainer;
 import net.minecraft.block.material.Material;
 import net.minecraft.creativetab.CreativeTabs;
@@ -9,16 +9,11 @@ import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.world.World;
 
-public class BlockLensMaker extends BlockContainer {
-    public BlockLensMaker(Material material, CreativeTabs creativeTabs) {
+public class BlockLensBench extends BlockContainer {
+    public BlockLensBench(Material material, CreativeTabs creativeTabs) {
         super(material);
         setCreativeTab(creativeTabs);
-        setUnlocalizedName("BlockLensMaker");
-    }
-
-    @Override
-    public TileEntity createNewTileEntity(World world, int metadata) {
-        return new TileEntityLensMaker();
+        setUnlocalizedName("BlockLensBench");
     }
 
     @Override
@@ -29,5 +24,10 @@ public class BlockLensMaker extends BlockContainer {
             return true;
         }
         return false;
+    }
+
+    @Override
+    public TileEntity createNewTileEntity(World world, int metadata) {
+        return new TileEntityLensBench();
     }
 }

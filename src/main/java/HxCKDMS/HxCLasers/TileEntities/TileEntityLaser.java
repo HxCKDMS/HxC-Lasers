@@ -34,7 +34,7 @@ public class TileEntityLaser extends TileEntity implements ILaser {
             if(isPowered && laserHandler.canBePlacedFromBlock(color, this)) {
                 ForgeDirection direction = ForgeDirection.getOrientation(getBlockMetadata());
 
-                worldObj.spawnEntityInWorld(new EntityLaserBeam(worldObj, xCoord + 0.5 + direction.offsetX, yCoord + direction.offsetY, zCoord + 0.5 + direction.offsetZ, uuid, direction, 4, color));
+                worldObj.spawnEntityInWorld(new EntityLaserBeam(worldObj, xCoord + 0.5 + direction.offsetX, yCoord + direction.offsetY, zCoord + 0.5 + direction.offsetZ, uuid, direction, 4, lens));
             }
         }
     }

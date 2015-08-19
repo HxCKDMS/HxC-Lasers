@@ -65,7 +65,7 @@ public class LaserHandler {
         int xCoord = tileEntityLaser.xCoord;
         int yCoord = tileEntityLaser.yCoord;
         int zCoord = tileEntityLaser.zCoord;
-        World worldObj = tileEntityLaser.getWorldObj();
+        World worldObj = tileEntityLaser.getWorld();
 
         ForgeDirection direction = ForgeDirection.getOrientation(tileEntityLaser.getBlockMetadata());
 
@@ -88,7 +88,9 @@ public class LaserHandler {
                 if (entityLaserBeam.uuid.toString().equals(tileEntityLaser.uuid.toString())) {
                     canBePlaced = false;
 
-                    if(entityLaserBeam.color.getRGB() != color.getRGB()) {
+                    Color otherColor = Color.white;
+                    if(entityLaserBeam.lens != null && entityLaserBeam.lens.hasTagCompound()) otherColor = new Color(entityLaserBeam.lens.stackTagCompound.getInteger("Red"), entityLaserBeam.lens.stackTagCompound.getInteger("Green"), entityLaserBeam.lens.stackTagCompound.getInteger("Blue"));
+                    if(otherColor.getRGB() != color.getRGB()) {
                         tileEntityLaser.uuid = UUID.randomUUID();
                         return true;
                     }
@@ -104,11 +106,11 @@ public class LaserHandler {
         for(Object object : entityList){
             if(object instanceof Entity && !(object instanceof EntityLaserBeam)){
                 Entity entity = (Entity) object;
-                entityInteract(null, entity);
+                entityInteract(entity);
             }
         }
 
-        blockInteract(null, (int)Math.floor(laserBeam.posX), (int)Math.floor(laserBeam.posY), (int)Math.floor(laserBeam.posZ), laserBeam.worldObj);
+        blockInteract((int)Math.floor(laserBeam.posX), (int)Math.floor(laserBeam.posY), (int)Math.floor(laserBeam.posZ), laserBeam.worldObj);
     }
 
     public static AxisAlignedBB getLaserBoundingBox(ForgeDirection direction, AxisAlignedBB boundingBox){
@@ -119,15 +121,43 @@ public class LaserHandler {
         return AxisAlignedBB.getBoundingBox(boundingBox.minX + offsetX, boundingBox.minY + offsetY, boundingBox.minZ + offsetZ, boundingBox.maxX - offsetX, boundingBox.maxY - offsetY, boundingBox.maxZ - offsetZ);
     }
 
+    public void entityInteract(Entity entity) {
+
+    }
+
+    public void blockInteract(int x, int y, int z, World world) {
+
+    }
+
+
+    //HELPER METHODS
     public static boolean areColorsEqual(Color color1, Color color2){
         return color1.getRed() == color2.getRed() && color1.getGreen() == color2.getGreen() && color1.getBlue() == color2.getBlue() && color1.getAlpha() == color2.getAlpha();
     }
 
-    public void entityInteract(LensUpgrade[] lensUpgrades, Entity entity) {
+    public static Color blendColors(Color color1, Color color2, float ratio) {
+        if ( ratio > 1f ) ratio = 1f;
+        else if ( ratio < 0f ) ratio = 0f;
+        float iRatio = 1.0f - ratio;
 
-    }
+        int i1 = color1.getRGB();
+        int i2 = color2.getRGB();
 
-    public void blockInteract(LensUpgrade[] lensUpgrades, int x, int y, int z, World world) {
+        int a1 = (i1 >> 24 & 0xff);
+        int r1 = ((i1 & 0xff0000) >> 16);
+        int g1 = ((i1 & 0xff00) >> 8);
+        int b1 = (i1 & 0xff);
 
+        int a2 = (i2 >> 24 & 0xff);
+        int r2 = ((i2 & 0xff0000) >> 16);
+        int g2 = ((i2 & 0xff00) >> 8);
+        int b2 = (i2 & 0xff);
+
+        int a = (int)((a1 * iRatio) + (a2 * ratio));
+        int r = (int)((r1 * iRatio) + (r2 * ratio));
+        int g = (int)((g1 * iRatio) + (g2 * ratio));
+        int b = (int)((b1 * iRatio) + (b2 * ratio));
+
+        return new Color( a << 24 | r << 16 | g << 8 | b, true);
     }
 }

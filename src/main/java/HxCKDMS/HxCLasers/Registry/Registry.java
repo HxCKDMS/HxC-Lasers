@@ -4,6 +4,7 @@ import HxCKDMS.HxCLasers.Api.LaserRegistry;
 import HxCKDMS.HxCLasers.Api.LensUpgrade;
 import HxCKDMS.HxCLasers.Blocks.BlockLaser;
 import HxCKDMS.HxCLasers.Blocks.BlockLensMaker;
+import HxCKDMS.HxCLasers.Blocks.BlockLensBench;
 import HxCKDMS.HxCLasers.Entity.EntityLaserBeam;
 import HxCKDMS.HxCLasers.HxCLasers;
 import HxCKDMS.HxCLasers.Items.ItemLens;
@@ -13,6 +14,7 @@ import HxCKDMS.HxCLasers.Lasers.LaserRed;
 import HxCKDMS.HxCLasers.Lasers.LaserWhite;
 import HxCKDMS.HxCLasers.TileEntities.TileEntityLaser;
 import HxCKDMS.HxCLasers.TileEntities.TileEntityLensMaker;
+import HxCKDMS.HxCLasers.TileEntities.TileEntityLensBench;
 import cpw.mods.fml.common.registry.EntityRegistry;
 import cpw.mods.fml.common.registry.GameRegistry;
 import net.minecraft.block.Block;
@@ -31,6 +33,7 @@ public class Registry {
     //BLOCKS
     public static final Block blockLensMaker = new BlockLensMaker(Material.iron, creativeTabHxCLasers);
     public static final Block blockLaser = new BlockLaser(Material.rock, creativeTabHxCLasers);
+    public static final Block blockLensBench = new BlockLensBench(Material.iron, creativeTabHxCLasers);
 
     //ITEMS
     public static final Item itemLens = new ItemLens(creativeTabHxCLasers);
@@ -49,6 +52,7 @@ public class Registry {
     private static void registerBlocks(){
         GameRegistry.registerBlock(blockLensMaker, "BlockLensMaker");
         GameRegistry.registerBlock(blockLaser, "BlockLaser");
+        GameRegistry.registerBlock(blockLensBench, "BlockLensBench");
     }
 
     private static void registerItems(){
@@ -58,6 +62,7 @@ public class Registry {
     private static void registerTileEntities(){
         GameRegistry.registerTileEntity(TileEntityLensMaker.class, MOD_ID + ":TileEntityLensMaker");
         GameRegistry.registerTileEntity(TileEntityLaser.class, MOD_ID + ":TileEntityLaser");
+        GameRegistry.registerTileEntity(TileEntityLensBench.class, MOD_ID + ":TileEntityLensBench");
     }
 
     private static void registerEntities(){
@@ -81,5 +86,7 @@ public class Registry {
         LaserRegistry.registerLaserUpgrade(Blocks.glowstone, new LensUpgrade(LensUpgrade.UpgradeType.RANGE, 10));
 
         LaserRegistry.registerLaserUpgrade(Items.blaze_powder, new LensUpgrade(LensUpgrade.UpgradeType.TRANSPARENCY, 1));
+
+        LaserRegistry.registerLaserUpgrade(Items.ender_pearl, new LensUpgrade(LensUpgrade.UpgradeType.ADVANCED));
     }
 }

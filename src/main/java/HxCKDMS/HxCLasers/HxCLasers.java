@@ -28,7 +28,7 @@ public class HxCLasers {
 
     @Mod.EventHandler
     public void preInit(FMLPreInitializationEvent event) {
-        network = NetworkRegistry.INSTANCE.newSimpleChannel(PACKET_CHANNEL_NAME);
+        HxCLasers.network = NetworkRegistry.INSTANCE.newSimpleChannel(PACKET_CHANNEL_NAME);
         network.registerMessage(MessageLensMakerSync.Handler.class, MessageLensMakerSync.class, 0, Side.SERVER);
         network.registerMessage(MessageLensMakerStart.Handler.class, MessageLensMakerStart.class, 1, Side.SERVER);
 

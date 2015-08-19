@@ -12,6 +12,8 @@ import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.common.util.ForgeDirection;
 import org.lwjgl.opengl.GL11;
 
+import java.awt.*;
+
 @SideOnly(Side.CLIENT)
 public class EntityLaserRenderer extends RenderEntity{
     ResourceLocation textureLaserBeam = new ResourceLocation(References.RESOURCE_LOCATION + "textures/entities/entityLaser.png");
@@ -46,7 +48,8 @@ public class EntityLaserRenderer extends RenderEntity{
             {
                 tessellator.setBrightness(15728880);
                 GL11.glBlendFunc(GL11.GL_SRC_ALPHA, GL11.GL_ONE_MINUS_SRC_ALPHA);
-                GL11.glColor4f(entityLaserBeam.color.getRed()/255F, entityLaserBeam.color.getGreen()/255F, entityLaserBeam.color.getBlue()/255F, 0.5F);
+                Color color = new Color(entityLaserBeam.getDataWatcher().getWatchableObjectInt(26), entityLaserBeam.getDataWatcher().getWatchableObjectInt(27), entityLaserBeam.getDataWatcher().getWatchableObjectInt(28));
+                GL11.glColor4f(color.getRed()/255F, color.getGreen()/255F, color.getBlue()/255F, 0.5F);
 
                 bindTexture(textureLaserBeam);
 

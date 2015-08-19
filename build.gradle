@@ -25,12 +25,13 @@ group= "HxCKDMS.HxCLasers" // http://maven.apache.org/guides/mini/guide-naming-c
 archivesBaseName = "HxCLasers"
 
 minecraft {
+    mappings = "stable_12"
     version = "1.7.10-10.13.4.1448-1.7.10"
     runDir = "eclipse"
 }
 
 dependencies {
-    runtime files('HxCCore-1.7.10-1.6.0-dev.jar')
+    runtime files('HxCCore-1.7.10-1.8.1-dev.jar')
 }
 
 processResources

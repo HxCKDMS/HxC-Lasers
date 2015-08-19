@@ -24,7 +24,7 @@ public class BlockLaser extends BlockContainer {
 
     public BlockLaser(Material material, CreativeTabs creativeTab) {
         super(material);
-        setBlockName("BlockLaser");
+        setUnlocalizedName("BlockLaser");
         setCreativeTab(creativeTab);
     }
 
@@ -40,7 +40,7 @@ public class BlockLaser extends BlockContainer {
 
     @Override
     @SideOnly(Side.CLIENT)
-    public void registerBlockIcons(IIconRegister iconRegister) {
+    public void registerIcons(IIconRegister iconRegister) {
         icons = new IIcon[2];
 
         icons[0] = iconRegister.registerIcon(References.RESOURCE_LOCATION + "blockLaserSides");
