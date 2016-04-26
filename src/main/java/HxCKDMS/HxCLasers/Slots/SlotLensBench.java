@@ -2,23 +2,24 @@ package HxCKDMS.HxCLasers.Slots;
 
 import HxCKDMS.HxCLasers.Api.ILens;
 import HxCKDMS.HxCLasers.Api.LaserRegistry;
-import HxCKDMS.HxCLasers.TileEntities.TileEntityLensMaker;
-import net.minecraft.entity.player.EntityPlayer;
+import HxCKDMS.HxCLasers.TileEntities.TileEntityLensBench;
 import net.minecraft.inventory.IInventory;
 import net.minecraft.inventory.Slot;
 import net.minecraft.item.ItemStack;
 
-import static HxCKDMS.HxCLasers.Slots.SlotLensMaker.SlotType.*;
+import static HxCKDMS.HxCLasers.Slots.SlotLensBench.SlotType.GEM;
+import static HxCKDMS.HxCLasers.Slots.SlotLensBench.SlotType.LENS;
+import static HxCKDMS.HxCLasers.Slots.SlotLensBench.SlotType.*;
 
 @SuppressWarnings("Duplicates")
-public class SlotLensMaker extends Slot {
+public class SlotLensBench extends Slot {
     private SlotType type;
-    TileEntityLensMaker lensMaker;
+    TileEntityLensBench lensBench;
 
-    public SlotLensMaker(IInventory inventory, int id, int xPos, int yPos, SlotType type) {
+    public SlotLensBench(IInventory inventory, int id, int xPos, int yPos, SlotType type) {
         super(inventory, id, xPos, yPos);
         this.type = type;
-        lensMaker = (TileEntityLensMaker) inventory;
+        lensBench = (TileEntityLensBench) inventory;
     }
 
     @Override
@@ -27,11 +28,6 @@ public class SlotLensMaker extends Slot {
         else if (type == UPGRADE) return LaserRegistry.isItemUpgrade(stack);
         else if(type == GEM) return true;
         return false;
-    }
-
-    @Override
-    public boolean canTakeStack(EntityPlayer player) {
-        return !(lensMaker.ticksRemaining > 0);
     }
 
     public enum SlotType{

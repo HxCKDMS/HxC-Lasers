@@ -19,7 +19,7 @@ public class BlockLensBench extends BlockContainer {
     @Override
     public boolean onBlockActivated(World world, int x, int y, int z, EntityPlayer player, int metadata, float bx, float by, float bz) {
         TileEntity tileEntity = world.getTileEntity(x, y, z);
-        if(tileEntity != null && !player.isSneaking()){
+        if(tileEntity != null && !player.isSneaking()) {
             player.openGui(HxCLasers.instance, 0, world, x, y, z);
             return true;
         }

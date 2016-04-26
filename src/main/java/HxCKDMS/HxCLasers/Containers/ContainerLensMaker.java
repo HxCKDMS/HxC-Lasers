@@ -34,13 +34,13 @@ public class ContainerLensMaker extends Container {
 
     private void addSlotsToContainer(TileEntityLensMaker tileEntityLensMaker){
         //0-2 gem slots red -> green -> blue
-        for(int x = 0; x < 3; x++){
+        for (int x = 0; x < 3; x++){
             addSlotToContainer(new SlotLensMaker(tileEntityLensMaker, x, 8 + 27 * x, 62, SlotLensMaker.SlotType.GEM));
         }
 
-        //3-8 update slots
-        for(int x = 0; x < 3; x++){
-            for(int y = 0; y < 2; y++){
+        //3-8 upgrade slots
+        for (int x = 0; x < 3; x++){
+            for (int y = 0; y < 2; y++){
                 addSlotToContainer(new SlotLensMaker(tileEntityLensMaker, 3 + x + y * 3, 82 + x * 20, 5 + y * 19, SlotLensMaker.SlotType.UPGRADE));
             }
         }
