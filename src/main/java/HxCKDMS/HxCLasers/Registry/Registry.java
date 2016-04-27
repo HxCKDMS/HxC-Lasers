@@ -3,25 +3,24 @@ package HxCKDMS.HxCLasers.Registry;
 import HxCKDMS.HxCLasers.Api.LaserRegistry;
 import HxCKDMS.HxCLasers.Api.LensUpgrade;
 import HxCKDMS.HxCLasers.Blocks.BlockLaser;
-import HxCKDMS.HxCLasers.Blocks.BlockLensMaker;
 import HxCKDMS.HxCLasers.Blocks.BlockLensBench;
+import HxCKDMS.HxCLasers.Blocks.BlockLensMaker;
 import HxCKDMS.HxCLasers.Entity.EntityLaserBeam;
 import HxCKDMS.HxCLasers.HxCLasers;
 import HxCKDMS.HxCLasers.Items.ItemLens;
+import HxCKDMS.HxCLasers.Items.ItemRuby;
 import HxCKDMS.HxCLasers.Lasers.LaserBlue;
 import HxCKDMS.HxCLasers.Lasers.LaserGreen;
 import HxCKDMS.HxCLasers.Lasers.LaserRed;
 import HxCKDMS.HxCLasers.Lasers.LaserWhite;
 import HxCKDMS.HxCLasers.TileEntities.TileEntityLaser;
-import HxCKDMS.HxCLasers.TileEntities.TileEntityLensMaker;
 import HxCKDMS.HxCLasers.TileEntities.TileEntityLensBench;
+import HxCKDMS.HxCLasers.TileEntities.TileEntityLensMaker;
 import cpw.mods.fml.common.registry.EntityRegistry;
 import cpw.mods.fml.common.registry.GameRegistry;
-import net.minecraft.block.Block;
 import net.minecraft.block.material.Material;
 import net.minecraft.init.Blocks;
 import net.minecraft.init.Items;
-import net.minecraft.item.Item;
 
 import java.awt.*;
 
@@ -31,12 +30,13 @@ public class Registry {
     public static final CreativeTabHxCLasers creativeTabHxCLasers = new CreativeTabHxCLasers("HxCLasers");
 
     //BLOCKS
-    public static final Block blockLensMaker = new BlockLensMaker(Material.iron, creativeTabHxCLasers);
-    public static final Block blockLaser = new BlockLaser(Material.rock, creativeTabHxCLasers);
-    public static final Block blockLensBench = new BlockLensBench(Material.iron, creativeTabHxCLasers);
+    public static final BlockLensMaker blockLensMaker = new BlockLensMaker(Material.iron, creativeTabHxCLasers);
+    public static final BlockLaser blockLaser = new BlockLaser(Material.rock, creativeTabHxCLasers);
+    public static final BlockLensBench blockLensBench = new BlockLensBench(Material.iron, creativeTabHxCLasers);
 
     //ITEMS
-    public static final Item itemLens = new ItemLens(creativeTabHxCLasers);
+    public static final ItemLens itemLens = new ItemLens(creativeTabHxCLasers);
+    public static final ItemRuby itemRuby = new ItemRuby(creativeTabHxCLasers);
 
     public static void preInit(){
         registerBlocks();
@@ -57,6 +57,7 @@ public class Registry {
 
     private static void registerItems(){
         GameRegistry.registerItem(itemLens, "ItemLens");
+        GameRegistry.registerItem(itemRuby, "ItemRuby");
     }
 
     private static void registerTileEntities(){
@@ -78,7 +79,7 @@ public class Registry {
 
     private static void registerLensUpgrades(){
         LaserRegistry.registerLaserUpgrade(Items.redstone, new LensUpgrade(LensUpgrade.UpgradeType.POWER, 1));
-        //RUBY
+        LaserRegistry.registerLaserUpgrade(itemRuby, new LensUpgrade(LensUpgrade.UpgradeType.POWER, 2));
         LaserRegistry.registerLaserUpgrade(Items.diamond, new LensUpgrade(LensUpgrade.UpgradeType.POWER, 3));
 
         LaserRegistry.registerLaserUpgrade(Blocks.dirt, new LensUpgrade(LensUpgrade.UpgradeType.RANGE, -1));

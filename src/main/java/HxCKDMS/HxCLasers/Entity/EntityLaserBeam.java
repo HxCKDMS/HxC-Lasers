@@ -1,7 +1,9 @@
 package HxCKDMS.HxCLasers.Entity;
 
+import HxCKDMS.HxCLasers.Api.ILens;
 import HxCKDMS.HxCLasers.Api.LaserHandler;
 import HxCKDMS.HxCLasers.Api.LaserRegistry;
+import HxCKDMS.HxCLasers.Registry.Registry;
 import net.minecraft.entity.Entity;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
@@ -17,6 +19,8 @@ public class EntityLaserBeam extends Entity {
     public int distanceExtending;
     public boolean shouldDrawTop;
     public ItemStack lens;
+    public int powerLevel;
+    public boolean transparent;
 
     private LaserHandler laserHandler;
     private boolean first = true;
@@ -36,6 +40,8 @@ public class EntityLaserBeam extends Entity {
 
     @Override
     protected void entityInit() {
+        dataWatcher.addObject(24, (byte) 0); //transparent
+        dataWatcher.addObject(25, 1); //powerLevel
         dataWatcher.addObject(26, 0); //red
         dataWatcher.addObject(27, 0); //green
         dataWatcher.addObject(28, 0); //blue
@@ -61,10 +67,12 @@ public class EntityLaserBeam extends Entity {
     public void onUpdate() {
         if(!worldObj.isRemote){
             Color color = Color.white;
-            if(lens != null && lens.hasTagCompound()) color = new Color(lens.stackTagCompound.getInteger("Red"), lens.stackTagCompound.getInteger("Green"), lens.stackTagCompound.getInteger("Blue"));
+            if(lens != null && lens.hasTagCompound()) color = ((ILens) lens.getItem()).getColor(lens);
 
             if(first) {
                 laserHandler = LaserRegistry.getLaserHandler(color);
+                transparent = lens != null && Registry.itemLens.isTransparent(lens);
+                powerLevel = lens != null ? Registry.itemLens.getPowerLevel(lens) : 1;
                 laserHandler.laserBeam = this;
                 first = false;
             }
@@ -77,7 +85,11 @@ public class EntityLaserBeam extends Entity {
                 worldObj.spawnEntityInWorld(new EntityLaserBeam(worldObj, posX + direction.offsetX, posY + direction.offsetY, posZ + direction.offsetZ, uuid, direction, distanceExtending - 1, lens));
             }
 
+
             laserHandler.handleCollision();
+
+            dataWatcher.updateObject(24, transparent ? (byte) 1 : (byte) 0);
+            dataWatcher.updateObject(25, powerLevel);
 
             dataWatcher.updateObject(26, color.getRed());
             dataWatcher.updateObject(27, color.getGreen());

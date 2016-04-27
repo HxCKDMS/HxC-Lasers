@@ -5,6 +5,7 @@ import HxCKDMS.HxCLasers.Api.ILens;
 import HxCKDMS.HxCLasers.Api.LaserHandler;
 import HxCKDMS.HxCLasers.Api.LaserRegistry;
 import HxCKDMS.HxCLasers.Entity.EntityLaserBeam;
+import HxCKDMS.HxCLasers.Registry.Registry;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.tileentity.TileEntity;
@@ -34,7 +35,7 @@ public class TileEntityLaser extends TileEntity implements ILaser {
             if(isPowered && laserHandler.canBePlacedFromBlock(color, this)) {
                 ForgeDirection direction = ForgeDirection.getOrientation(getBlockMetadata());
 
-                worldObj.spawnEntityInWorld(new EntityLaserBeam(worldObj, xCoord + 0.5 + direction.offsetX, yCoord + direction.offsetY, zCoord + 0.5 + direction.offsetZ, uuid, direction, 4, lens));
+                worldObj.spawnEntityInWorld(new EntityLaserBeam(worldObj, xCoord + 0.5 + direction.offsetX, yCoord + direction.offsetY, zCoord + 0.5 + direction.offsetZ, uuid, direction, lens != null ? Registry.itemLens.getRange(lens) - 1 : 9, lens));
             }
         }
     }

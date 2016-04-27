@@ -1,2 +1,4 @@
-tile.BlockLensMaker.name=Lens Fabricator
+tile.BlockLensMaker.name=Lens fabricator
+tile.BlockLensBench.name=Lens bench
 item.ItemLens.name=Lens
+item.ItemRuby.name=Ruby

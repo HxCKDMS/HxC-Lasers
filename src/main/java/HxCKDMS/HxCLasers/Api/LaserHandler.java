@@ -4,6 +4,7 @@ import HxCKDMS.HxCLasers.Entity.EntityLaserBeam;
 import HxCKDMS.HxCLasers.TileEntities.TileEntityLaser;
 import net.minecraft.block.Block;
 import net.minecraft.entity.Entity;
+import net.minecraft.init.Blocks;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.AxisAlignedBB;
 import net.minecraft.world.World;
@@ -18,7 +19,7 @@ public class LaserHandler {
 
     public boolean canExist() {
         Block block = laserBeam.worldObj.getBlock((int) Math.floor(laserBeam.posX), (int) Math.floor(laserBeam.posY), (int) Math.floor(laserBeam.posZ));
-        if(block.isOpaqueCube()) return false;
+        if (block != Blocks.air && block != Blocks.glass) return false;
 
         AxisAlignedBB axisAlignedBB = laserBeam.boundingBox.copy();
         axisAlignedBB.offset(laserBeam.direction.getOpposite().offsetX, laserBeam.direction.getOpposite().offsetY, laserBeam.direction.getOpposite().offsetZ);
@@ -37,7 +38,7 @@ public class LaserHandler {
 
     public boolean canBePlaced() {
         Block block = laserBeam.worldObj.getBlock((int) Math.floor(laserBeam.posX) + laserBeam.direction.offsetX, (int) Math.floor(laserBeam.posY) + laserBeam.direction.offsetY, (int) Math.floor(laserBeam.posZ) + laserBeam.direction.offsetZ);
-        if(block.isOpaqueCube()) {
+        if (block != Blocks.air && block != Blocks.glass) {
             laserBeam.shouldDrawTop = true;
             return false;
         }
@@ -46,7 +47,7 @@ public class LaserHandler {
         axisAlignedBB.offset(laserBeam.direction.offsetX, laserBeam.direction.offsetY, laserBeam.direction.offsetZ);
 
         List entityList = laserBeam.worldObj.getEntitiesWithinAABB(EntityLaserBeam.class, axisAlignedBB);
-        if(entityList.size() == 0) return true;
+        if(entityList.isEmpty()) return true;
 
         boolean canBePlaced = true;
 
@@ -55,6 +56,7 @@ public class LaserHandler {
                 EntityLaserBeam entityLaserBeam = (EntityLaserBeam) object;
                 if (entityLaserBeam.uuid.toString().equals(laserBeam.uuid.toString())) {
                     canBePlaced = false;
+                    break;
                 }
             }
         }
@@ -100,25 +102,28 @@ public class LaserHandler {
         return canBePlaced;
     }
 
+    @SuppressWarnings("unchecked")
     public void handleCollision(){
-        List entityList = laserBeam.worldObj.getEntitiesWithinAABB(Entity.class, getLaserBoundingBox(laserBeam.direction, laserBeam.boundingBox));
+        List entityList = laserBeam.worldObj.getEntitiesWithinAABB(Entity.class, getLaserBoundingBox(laserBeam.direction, laserBeam.boundingBox, laserBeam.powerLevel));
 
-        for(Object object : entityList){
-            if(object instanceof Entity && !(object instanceof EntityLaserBeam)){
-                Entity entity = (Entity) object;
-                entityInteract(entity);
-            }
-        }
+        entityList.stream().filter(object -> object instanceof Entity && !(object instanceof EntityLaserBeam)).forEach(object -> {
+            Entity entity = (Entity) object;
+            entityInteract(entity);
+        });
 
         blockInteract((int)Math.floor(laserBeam.posX), (int)Math.floor(laserBeam.posY), (int)Math.floor(laserBeam.posZ), laserBeam.worldObj);
     }
 
-    public static AxisAlignedBB getLaserBoundingBox(ForgeDirection direction, AxisAlignedBB boundingBox){
-        double offsetX = (direction == ForgeDirection.UP || direction == ForgeDirection.DOWN || direction == ForgeDirection.NORTH || direction == ForgeDirection.SOUTH) ? 0.33 : 0;
-        double offsetY = (direction == ForgeDirection.EAST || direction == ForgeDirection.WEST || direction == ForgeDirection.NORTH || direction == ForgeDirection.SOUTH) ? 0.33 : 0;
-        double offsetZ = (direction == ForgeDirection.UP || direction == ForgeDirection.DOWN || direction == ForgeDirection.EAST || direction == ForgeDirection.WEST) ? 0.33 : 0;
+    protected static AxisAlignedBB getLaserBoundingBox(ForgeDirection direction, AxisAlignedBB boundingBox, int power) {
+        double offsetX = (direction == ForgeDirection.UP || direction == ForgeDirection.DOWN || direction == ForgeDirection.NORTH || direction == ForgeDirection.SOUTH) ? (-11D * power + 191D) / 400D : 0;
+        double offsetY = (direction == ForgeDirection.EAST || direction == ForgeDirection.WEST || direction == ForgeDirection.NORTH || direction == ForgeDirection.SOUTH) ? (-11D * power + 191D) / 400D : 0;
+        double offsetZ = (direction == ForgeDirection.UP || direction == ForgeDirection.DOWN || direction == ForgeDirection.EAST || direction == ForgeDirection.WEST) ? (-11D * power + 191D) / 400D : 0;
 
         return AxisAlignedBB.getBoundingBox(boundingBox.minX + offsetX, boundingBox.minY + offsetY, boundingBox.minZ + offsetZ, boundingBox.maxX - offsetX, boundingBox.maxY - offsetY, boundingBox.maxZ - offsetZ);
+    }
+
+    protected static AxisAlignedBB getItemCollisionBox(AxisAlignedBB boundingBox) {
+        return AxisAlignedBB.getBoundingBox(boundingBox.minX, boundingBox.minY, boundingBox.minZ , boundingBox.maxX, boundingBox.maxY, boundingBox.maxZ);
     }
 
     public void entityInteract(Entity entity) {
@@ -131,10 +136,12 @@ public class LaserHandler {
 
 
     //HELPER METHODS
+    @SuppressWarnings("unused")
     public static boolean areColorsEqual(Color color1, Color color2){
         return color1.getRed() == color2.getRed() && color1.getGreen() == color2.getGreen() && color1.getBlue() == color2.getBlue() && color1.getAlpha() == color2.getAlpha();
     }
 
+    @SuppressWarnings("unused")
     public static Color blendColors(Color color1, Color color2, float ratio) {
         if ( ratio > 1f ) ratio = 1f;
         else if ( ratio < 0f ) ratio = 0f;

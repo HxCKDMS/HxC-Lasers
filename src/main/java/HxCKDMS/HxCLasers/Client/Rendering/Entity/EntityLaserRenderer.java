@@ -53,8 +53,8 @@ public class EntityLaserRenderer extends RenderEntity{
 
                 bindTexture(textureLaserBeam);
 
-                double size_1 = 0.4;
-                double size_2 = 0.6;
+                double size_1 = (-11D * entityLaserBeam.getDataWatcher().getWatchableObjectInt(25) + 191D) / 400D;
+                double size_2 = 1 - ((-11D * entityLaserBeam.getDataWatcher().getWatchableObjectInt(25) + 191D) / 400D);
 
                 //SIDES
                 tessellator.addVertex(size_1, 0, size_1);
